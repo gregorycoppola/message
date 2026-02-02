@@ -1,0 +1,1 @@
+Disjunction with two separate rules that conclude the same thing. Mother -> parent and father -> parent. Tests noisy-OR combining.

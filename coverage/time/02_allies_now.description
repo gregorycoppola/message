@@ -1,0 +1,1 @@
+Compound uncertainty through AND gate. Two probabilistic inferences (past trust -> present trust) feed into AND gate for allies. Probability should compound — lower than either individual inference. Tests uncertainty propagation.
