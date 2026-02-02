@@ -1,9 +1,6 @@
-"""
-Validate .logic files against a DSL spec.
-"""
-
+"""Validate .logic files structurally."""
+import re
 from dataclasses import dataclass
-from message.core.dsl import DSLSpec
 
 
 @dataclass
@@ -12,56 +9,87 @@ class CheckError:
     message: str
 
 
-def check_file(spec: DSLSpec, filepath: str) -> list[CheckError]:
-    """Validate a .logic file against a DSL spec."""
+def check_file(filepath: str) -> list[CheckError]:
     errors = []
-    
+    entities = {}
+    saw_query = False
+
     with open(filepath) as f:
         lines = f.readlines()
-    
+
     for i, line in enumerate(lines, 1):
         line = line.strip()
-        
         if not line or line.startswith("#"):
             continue
-        
-        line_errors = check_line(spec, line, i)
-        errors.extend(line_errors)
-    
+        if saw_query:
+            errors.append(CheckError(i, "Content after query line"))
+            continue
+        if line.startswith("? "):
+            saw_query = True
+            errors.extend(_check_pred_call(line[2:].strip(), i, entities))
+            if "&" in line or "->" in line:
+                errors.append(CheckError(i, "Query must be a simple proposition"))
+            continue
+        if line.startswith("entity "):
+            parts = line.split()
+            if len(parts) < 4 or parts[2] != ":":
+                errors.append(CheckError(i, "Bad entity syntax: expected 'entity NAME : TYPE'"))
+                continue
+            name = parts[1]
+            if name in entities:
+                errors.append(CheckError(i, f"Duplicate entity: {name}"))
+            entities[name] = parts[3]
+            continue
+        if line.startswith("rule "):
+            errors.extend(_check_rule(line, i, entities))
+            continue
+        if "(" in line:
+            errors.extend(_check_pred_call(line, i, entities))
+            continue
+        errors.append(CheckError(i, f"Unrecognized statement: {line}"))
+
+    if not saw_query:
+        errors.append(CheckError(len(lines), "Missing query (? ...) at end of file"))
+
     return errors
 
 
-def check_line(spec: DSLSpec, line: str, line_num: int) -> list[CheckError]:
-    """Check a single line against the DSL spec."""
+def _check_pred_call(text, line_num, entities):
     errors = []
-    
-    # Entity declaration
-    if line.startswith("entity "):
-        parts = line.split()
-        if len(parts) >= 4 and parts[2] == ":":
-            type_name = parts[3]
-            if type_name not in spec.types:
-                errors.append(CheckError(line_num, f"Unknown type: {type_name}"))
+    match = re.match(r'(\w+)\((.+)\)', text)
+    if not match:
+        errors.append(CheckError(line_num, f"Bad predicate syntax: {text}"))
         return errors
-    
-    # Rule
-    if line.startswith(("rule ", "always ", "usually ", "sometimes ",
-                        "often ", "likely ", "unlikely ", "rarely ", "never ")):
-        quantifier = line.split()[0]
-        if quantifier != "rule" and quantifier not in spec.quantifiers:
-            errors.append(CheckError(line_num, f"Unknown quantifier: {quantifier}"))
+    for arg in match.group(2).split(","):
+        arg = arg.strip()
+        if arg not in entities:
+            errors.append(CheckError(line_num, f"Unknown entity: {arg}"))
+    return errors
+
+
+def _check_rule(line, line_num, entities):
+    errors = []
+    bracket = re.search(r'\[(.+?)\]', line)
+    if not bracket:
+        errors.append(CheckError(line_num, "Rule missing variable bindings [v:T, ...]"))
         return errors
-    
-    # Query
-    if line.startswith("? "):
+    bound_vars = {}
+    for binding in bracket.group(1).split(","):
+        binding = binding.strip()
+        if ":" not in binding:
+            errors.append(CheckError(line_num, f"Bad binding: {binding}"))
+            continue
+        var, typ = binding.split(":", 1)
+        bound_vars[var.strip()] = typ.strip()
+    after = line.split("]", 1)[1]
+    if ":" in after:
+        after = after.split(":", 1)[1]
+    if "->" not in after:
+        errors.append(CheckError(line_num, "Rule missing ->"))
         return errors
-    
-    # Fact — check predicate name
-    if "(" in line:
-        pred_name = line.split("(")[0].strip()
-        # Predicate is either declared or ad-hoc (open world)
-        # For now just note if it's not declared
-        if pred_name not in spec.predicates:
-            errors.append(CheckError(line_num, f"Undeclared predicate: {pred_name} (not in DSL)"))
-    
+    scope = {**entities, **bound_vars}
+    for pred_match in re.finditer(r'(\w+)\(([^)]+)\)', after):
+        for arg in pred_match.group(2).split(","):
+            if arg.strip() not in scope:
+                errors.append(CheckError(line_num, f"Unbound argument: {arg.strip()}"))
     return errors
