@@ -91,7 +91,7 @@ def cmd_dsl_check(args):
         print(f"✗ File {args.file} doesn't match version {args.version}")
         sys.exit(1)
 
-    errors = check_file(args.file)
+    errors = check_file(args.file, version=args.version)
     if not errors:
         print(f"✓ {args.file} is valid {args.version}")
     else:
