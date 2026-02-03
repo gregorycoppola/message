@@ -16,6 +16,6 @@ person(theme: mailman1)
 bite(agent: dog1, patient: mailman1)
 belong_to(theme: dog1, reference: john)
 
-rule [d:e, p:e, o:e]: dog(theme: d) & bite(agent: d, patient: p) & person(theme: p) & belong_to(theme: d, reference: o) -> should(content: apologize(agent: o))
+always [d:e, p:e, o:e]: dog(theme: d) & bite(agent: d, patient: p) & person(theme: p) & belong_to(theme: d, reference: o) -> should(content: apologize(agent: o))
 
 ? should(content: apologize(agent: john))

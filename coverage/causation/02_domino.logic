@@ -10,8 +10,8 @@ entity d : e
 
 push(patient: a)
 
-rule: push(patient: a) -> knocked_over(theme: b)
-rule: knocked_over(theme: b) -> knocked_over(theme: c)
-rule: knocked_over(theme: c) -> knocked_over(theme: d)
+always: push(patient: a) -> knocked_over(theme: b)
+always: knocked_over(theme: b) -> knocked_over(theme: c)
+always: knocked_over(theme: c) -> knocked_over(theme: d)
 
 ? knocked_over(theme: d)

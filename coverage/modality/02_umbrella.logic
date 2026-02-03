@@ -6,6 +6,6 @@ predicate should {content: s}
 
 raining()
 
-rule: raining() -> should(content: bring_umbrella())
+always: raining() -> should(content: bring_umbrella())
 
 ? should(content: bring_umbrella())

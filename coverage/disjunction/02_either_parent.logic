@@ -11,7 +11,7 @@ entity carol : e
 mother_of(agent: alice, patient: bob)
 father_of(agent: carol, patient: bob)
 
-rule [x:e, y:e]: mother_of(agent: x, patient: y) -> parent_of(agent: x, patient: y)
-rule [x:e, y:e]: father_of(agent: x, patient: y) -> parent_of(agent: x, patient: y)
+always [x:e, y:e]: mother_of(agent: x, patient: y) -> parent_of(agent: x, patient: y)
+always [x:e, y:e]: father_of(agent: x, patient: y) -> parent_of(agent: x, patient: y)
 
 ? parent_of(agent: alice, patient: bob)

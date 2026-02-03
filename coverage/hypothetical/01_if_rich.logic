@@ -7,6 +7,6 @@ entity john : e
 
 not rich(theme: john)
 
-rule [x:e]: rich(theme: x) -> buy_house(theme: x)
+always [x:e]: rich(theme: x) -> buy_house(theme: x)
 
 ? buy_house(theme: john)

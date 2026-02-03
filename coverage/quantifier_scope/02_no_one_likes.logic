@@ -8,6 +8,6 @@ entity broccoli : e
 
 person(theme: tom)
 
-rule [x:e]: person(theme: x) -> not like(agent: x, patient: broccoli)
+never [x:e]: person(theme: x) -> like(agent: x, patient: broccoli)
 
 ? like(agent: tom, patient: broccoli)

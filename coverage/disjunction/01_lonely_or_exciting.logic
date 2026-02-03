@@ -8,7 +8,7 @@ entity alice : e
 
 lives_alone(theme: alice)
 
-rule [x:e]: lives_alone(theme: x) -> lonely(theme: x)
-rule [x:e]: lives_alone(theme: x) -> finds_exciting(theme: x)
+sometimes [x:e]: lives_alone(theme: x) -> lonely(theme: x)
+sometimes [x:e]: lives_alone(theme: x) -> finds_exciting(theme: x)
 
 ? lonely(theme: alice)
