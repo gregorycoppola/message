@@ -11,7 +11,7 @@ entity boss1 : e
 boss_of(theme: boss1, reference: tom)
 miss_bus(theme: tom)
 
-rule [x:e]: miss_bus(theme: x) -> late(theme: x)
-rule [x:e, b:e]: late(theme: x) & boss_of(theme: b, reference: x) -> angry(theme: b)
+always [x:e]: miss_bus(theme: x) -> late(theme: x)
+always [x:e, b:e]: late(theme: x) & boss_of(theme: b, reference: x) -> angry(theme: b)
 
 ? angry(theme: boss1)

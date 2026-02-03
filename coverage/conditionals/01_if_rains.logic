@@ -7,6 +7,6 @@ entity ground : e
 
 raining()
 
-rule: raining() -> wet(theme: ground)
+always: raining() -> wet(theme: ground)
 
 ? wet(theme: ground)

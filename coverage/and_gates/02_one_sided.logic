@@ -8,6 +8,6 @@ entity jill : e
 
 trust(agent: jack, patient: jill)
 
-rule [x:e, y:e]: trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)
+always [x:e, y:e]: trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)
 
 ? allied(agent: jack, patient: jill)

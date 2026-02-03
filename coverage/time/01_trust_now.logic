@@ -9,6 +9,6 @@ entity present : e
 
 trust(agent: jack, patient: jill, time: past)
 
-rule [x:e, y:e] (0.7): trust(agent: x, patient: y, time: past) -> trust(agent: x, patient: y, time: present)
+usually [x:e, y:e]: trust(agent: x, patient: y, time: past) -> trust(agent: x, patient: y, time: present)
 
 ? trust(agent: jack, patient: jill, time: present)

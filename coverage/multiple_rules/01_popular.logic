@@ -9,7 +9,7 @@ entity jack : e
 funny(theme: jack)
 kind(theme: jack)
 
-rule [x:e]: funny(theme: x) -> liked(theme: x)
-rule [x:e]: kind(theme: x) -> liked(theme: x)
+always [x:e]: funny(theme: x) -> liked(theme: x)
+always [x:e]: kind(theme: x) -> liked(theme: x)
 
 ? liked(theme: jack)

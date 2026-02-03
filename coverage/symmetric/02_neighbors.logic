@@ -7,6 +7,6 @@ entity joneses : e
 
 live_next_to(agent: smiths, patient: joneses)
 
-rule [x:e, y:e]: live_next_to(agent: x, patient: y) -> live_next_to(agent: y, patient: x)
+always [x:e, y:e]: live_next_to(agent: x, patient: y) -> live_next_to(agent: y, patient: x)
 
 ? live_next_to(agent: joneses, patient: smiths)

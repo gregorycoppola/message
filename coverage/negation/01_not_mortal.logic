@@ -7,6 +7,6 @@ entity zeus : e
 
 god(theme: zeus)
 
-rule [x:e]: god(theme: x) -> not mortal(theme: x)
+never [x:e]: god(theme: x) -> mortal(theme: x)
 
 ? mortal(theme: zeus)

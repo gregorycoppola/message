@@ -7,6 +7,6 @@ entity mary : e
 
 married(agent: john, patient: mary)
 
-rule [x:e, y:e]: married(agent: x, patient: y) -> married(agent: y, patient: x)
+always [x:e, y:e]: married(agent: x, patient: y) -> married(agent: y, patient: x)
 
 ? married(agent: mary, patient: john)

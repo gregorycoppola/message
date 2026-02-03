@@ -9,6 +9,6 @@ entity book1 : e
 
 give(agent: john, patient: book1, recipient: mary)
 
-rule [x:e, y:e, z:e]: give(agent: x, patient: y, recipient: z) -> have(agent: z, patient: y)
+always [x:e, y:e, z:e]: give(agent: x, patient: y, recipient: z) -> have(agent: z, patient: y)
 
 ? have(agent: mary, patient: book1)

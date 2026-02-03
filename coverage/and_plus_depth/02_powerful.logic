@@ -20,7 +20,7 @@ large(theme: france)
 girl(theme: mary)
 love(agent: mary, patient: henry)
 
-rule [x:e, c:e]: old(theme: x) & king_of(theme: x, reference: c) & country(theme: c) & large(theme: c) -> powerful(theme: x)
-rule [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & powerful(theme: y) -> ambitious(theme: x)
+always [x:e, c:e]: old(theme: x) & king_of(theme: x, reference: c) & country(theme: c) & large(theme: c) -> powerful(theme: x)
+always [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & powerful(theme: y) -> ambitious(theme: x)
 
 ? ambitious(theme: mary)

@@ -8,6 +8,17 @@ import re
 from dataclasses import dataclass, field
 
 
+# Modal quantifiers and their weights
+MODALS = {
+    "always": 1.0,
+    "usually": 0.9,
+    "likely": 0.75,
+    "sometimes": 0.5,
+    "rarely": 0.2,
+    "never": 0.0,
+}
+
+
 @dataclass
 class CheckError:
     line: int
@@ -79,8 +90,9 @@ def check_file(filepath: str) -> list[CheckError]:
             errors.extend(_check_pred(query, i, predicates, entities, {}))
             continue
 
-        # Rule: rule [bindings] (weight): premises -> conclusion
-        if line.startswith("rule"):
+        # Rule: MODAL [bindings]: premises -> conclusion
+        # or: [bindings]: premises -> conclusion (defaults to always)
+        if _is_rule(line):
             saw_sentence = True
             errors.extend(_check_rule(line, i, predicates, entities))
             continue
@@ -100,6 +112,18 @@ def check_file(filepath: str) -> list[CheckError]:
         errors.append(CheckError(len(lines), "Missing query (? ...) at end"))
 
     return errors
+
+
+def _is_rule(line: str) -> bool:
+    """Check if a line is a rule."""
+    # Starts with a modal
+    for modal in MODALS:
+        if line.startswith(modal + " ") or line.startswith(modal + ":"):
+            return True
+    # Starts with [ (variable binding, defaults to always)
+    if line.startswith("["):
+        return True
+    return False
 
 
 def _parse_predicate_decl(line: str, line_num: int, predicates: dict) -> list[CheckError]:
@@ -233,14 +257,23 @@ def _check_rule(line: str, line_num: int, predicates: dict, entities: dict) -> l
     """Check a rule.
 
     Formats:
-      rule [x:e, y:e]: premise & premise -> conclusion
-      rule [x:e] (0.7): premise -> conclusion
-      rule: premise -> conclusion  (ground rule)
+      always [x:e, y:e]: premise & premise -> conclusion
+      usually [x:e]: premise -> conclusion
+      [x:e]: premise -> conclusion  (defaults to always)
+      always: premise -> conclusion  (ground rule)
     """
     errors = []
     bound_vars = {}
 
-    rest = line[4:].strip()  # strip "rule"
+    rest = line
+
+    # Parse optional modal
+    modal = "always"  # default
+    for m in MODALS:
+        if rest.startswith(m + " ") or rest.startswith(m + ":"):
+            modal = m
+            rest = rest[len(m):].strip()
+            break
 
     # Parse optional variable bindings [x:e, y:e]
     if rest.startswith("["):
@@ -274,16 +307,6 @@ def _check_rule(line: str, line_num: int, predicates: dict, entities: dict) -> l
                 errors.append(CheckError(line_num, "Empty variable name"))
                 continue
             bound_vars[var] = typ
-
-    # Parse optional weight (0.7)
-    if rest.startswith("("):
-        try:
-            weight_end = rest.index(")")
-            weight_str = rest[1:weight_end].strip()
-            float(weight_str)
-            rest = rest[weight_end + 1:].strip()
-        except (ValueError, IndexError):
-            errors.append(CheckError(line_num, "Bad rule weight"))
 
     # Strip leading colon
     if rest.startswith(":"):

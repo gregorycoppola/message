@@ -7,6 +7,6 @@ entity john : e
 
 person(theme: john)
 
-rule [x:e]: person(theme: x) -> likes_someone(theme: x)
+always [x:e]: person(theme: x) -> likes_someone(theme: x)
 
 ? likes_someone(theme: john)

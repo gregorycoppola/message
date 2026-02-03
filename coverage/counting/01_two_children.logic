@@ -11,6 +11,6 @@ entity carol : e
 son_of(theme: bob, reference: alice)
 daughter_of(theme: carol, reference: alice)
 
-rule [x:e, s:e, d:e]: son_of(theme: s, reference: x) & daughter_of(theme: d, reference: x) -> has_two_children(theme: x)
+always [x:e, s:e, d:e]: son_of(theme: s, reference: x) & daughter_of(theme: d, reference: x) -> has_two_children(theme: x)
 
 ? has_two_children(theme: alice)

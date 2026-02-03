@@ -16,6 +16,6 @@ not_equal(theme: alice, reference: bob)
 not_equal(theme: bob, reference: carol)
 not_equal(theme: alice, reference: carol)
 
-rule [x:e, y:e, z:e, t:e]: on_team(theme: x, reference: t) & on_team(theme: y, reference: t) & on_team(theme: z, reference: t) & not_equal(theme: x, reference: y) & not_equal(theme: y, reference: z) & not_equal(theme: x, reference: z) -> full(theme: t)
+always [x:e, y:e, z:e, t:e]: on_team(theme: x, reference: t) & on_team(theme: y, reference: t) & on_team(theme: z, reference: t) & not_equal(theme: x, reference: y) & not_equal(theme: y, reference: z) & not_equal(theme: x, reference: z) -> full(theme: t)
 
 ? full(theme: team1)

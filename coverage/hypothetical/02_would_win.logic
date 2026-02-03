@@ -7,6 +7,6 @@ entity team1 : e
 
 practice_daily(theme: team1)
 
-rule [x:e]: practice_daily(theme: x) -> win_championship(theme: x)
+likely [x:e]: practice_daily(theme: x) -> win_championship(theme: x)
 
 ? win_championship(theme: team1)

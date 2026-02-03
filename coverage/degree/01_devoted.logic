@@ -13,6 +13,6 @@ girl(theme: mary)
 man(theme: henry)
 love(agent: mary, patient: henry, degree: high)
 
-rule [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y, degree: high) & man(theme: y) -> devoted(theme: x)
+always [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y, degree: high) & man(theme: y) -> devoted(theme: x)
 
 ? devoted(theme: mary)
