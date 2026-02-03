@@ -1,0 +1,13 @@
+# Jack trusts Jill. Jill does not trust Jack. Are they allies?
+
+predicate trust {agent: e, patient: e}
+predicate allied {agent: e, patient: e}
+
+entity jack : e
+entity jill : e
+
+trust(agent: jack, patient: jill)
+
+rule [x:e, y:e]: trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)
+
+? allied(agent: jack, patient: jill)

@@ -1,5 +1,8 @@
 # Zeus is a god. No gods are mortal. Is Zeus mortal?
 
+predicate god {theme: e}
+predicate mortal {theme: e}
+
 entity zeus : e
 
 god(theme: zeus)

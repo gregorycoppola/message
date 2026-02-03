@@ -1,0 +1,14 @@
+# Paris is north of Lyon. Lyon is north of Marseille.
+
+predicate north_of {theme: e, reference: e}
+
+entity paris : e
+entity lyon : e
+entity marseille : e
+
+north_of(theme: paris, reference: lyon)
+north_of(theme: lyon, reference: marseille)
+
+rule [x:e, y:e, z:e]: north_of(theme: x, reference: y) & north_of(theme: y, reference: z) -> north_of(theme: x, reference: z)
+
+? north_of(theme: paris, reference: marseille)

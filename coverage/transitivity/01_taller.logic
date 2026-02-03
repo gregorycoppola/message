@@ -1,0 +1,14 @@
+# Alice is taller than Bob. Bob is taller than Carol.
+
+predicate taller_than {theme: e, reference: e}
+
+entity alice : e
+entity bob : e
+entity carol : e
+
+taller_than(theme: alice, reference: bob)
+taller_than(theme: bob, reference: carol)
+
+rule [x:e, y:e, z:e]: taller_than(theme: x, reference: y) & taller_than(theme: y, reference: z) -> taller_than(theme: x, reference: z)
+
+? taller_than(theme: alice, reference: carol)

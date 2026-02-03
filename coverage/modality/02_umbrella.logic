@@ -1,5 +1,9 @@
 # It is raining. If it is raining, you should bring an umbrella.
 
+predicate raining {}
+predicate bring_umbrella {}
+predicate should {content: s}
+
 raining()
 
 rule: raining() -> should(content: bring_umbrella())
