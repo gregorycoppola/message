@@ -1,0 +1,16 @@
+# Alice has a son named Bob. Alice has a daughter named Carol. If someone has a son and a daughter, they have two children.
+
+predicate son_of {theme: e, reference: e}
+predicate daughter_of {theme: e, reference: e}
+predicate has_two_children {theme: e}
+
+entity alice : e
+entity bob : e
+entity carol : e
+
+son_of(theme: bob, reference: alice)
+daughter_of(theme: carol, reference: alice)
+
+rule [x:e, s:e, d:e]: son_of(theme: s, reference: x) & daughter_of(theme: d, reference: x) -> has_two_children(theme: x)
+
+? has_two_children(theme: alice)

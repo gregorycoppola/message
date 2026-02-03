@@ -1,0 +1,12 @@
+# Everyone likes someone. John is a person.
+
+predicate person {theme: e}
+predicate likes_someone {theme: e}
+
+entity john : e
+
+person(theme: john)
+
+rule [x:e]: person(theme: x) -> likes_someone(theme: x)
+
+? likes_someone(theme: john)

@@ -1,0 +1,13 @@
+# No one likes broccoli. Tom is a person.
+
+predicate person {theme: e}
+predicate like {agent: e, patient: e}
+
+entity tom : e
+entity broccoli : e
+
+person(theme: tom)
+
+rule [x:e]: person(theme: x) -> not like(agent: x, patient: broccoli)
+
+? like(agent: tom, patient: broccoli)
