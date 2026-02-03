@@ -1,0 +1,15 @@
+# All birds can fly. Penguins are birds. Penguins cannot fly.
+
+predicate bird {theme: e}
+predicate penguin {theme: e}
+predicate can_fly {theme: e}
+
+entity penguin1 : e
+
+bird(theme: penguin1)
+penguin(theme: penguin1)
+
+rule [x:e]: bird(theme: x) -> can_fly(theme: x)
+rule [x:e]: penguin(theme: x) -> not can_fly(theme: x)
+
+? can_fly(theme: penguin1)

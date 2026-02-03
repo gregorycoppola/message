@@ -1,5 +1,8 @@
 # Pushing domino A knocks over B, B knocks over C, C knocks over D. Someone pushed A.
 
+predicate push {patient: e}
+predicate knocked_over {theme: e}
+
 entity a : e
 entity b : e
 entity c : e

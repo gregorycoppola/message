@@ -1,0 +1,19 @@
+# The suspect was at the scene, had a motive, owns the weapon.
+
+predicate at_scene {theme: e, reference: e}
+predicate has_motive {theme: e}
+predicate owns {agent: e, patient: e}
+predicate guilty {theme: e}
+
+entity suspect1 : e
+entity scene1 : e
+entity weapon1 : e
+
+at_scene(theme: suspect1, reference: scene1)
+has_motive(theme: suspect1)
+owns(agent: suspect1, patient: weapon1)
+
+rule [x:e, s:e] (0.7): at_scene(theme: x, reference: s) & has_motive(theme: x) -> guilty(theme: x)
+rule [x:e, w:e, s:e] (0.7): owns(agent: x, patient: w) & at_scene(theme: x, reference: s) -> guilty(theme: x)
+
+? guilty(theme: suspect1)

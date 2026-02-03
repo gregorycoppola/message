@@ -1,0 +1,14 @@
+# Fluffy is a poodle. All poodles are dogs. All dogs are animals.
+
+predicate poodle {theme: e}
+predicate dog {theme: e}
+predicate animal {theme: e}
+
+entity fluffy : e
+
+poodle(theme: fluffy)
+
+rule [x:e]: poodle(theme: x) -> dog(theme: x)
+rule [x:e]: dog(theme: x) -> animal(theme: x)
+
+? animal(theme: fluffy)

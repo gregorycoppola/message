@@ -1,0 +1,12 @@
+# The Smiths live next to the Joneses. If A lives next to B, then B lives next to A.
+
+predicate live_next_to {agent: e, patient: e}
+
+entity smiths : e
+entity joneses : e
+
+live_next_to(agent: smiths, patient: joneses)
+
+rule [x:e, y:e]: live_next_to(agent: x, patient: y) -> live_next_to(agent: y, patient: x)
+
+? live_next_to(agent: joneses, patient: smiths)

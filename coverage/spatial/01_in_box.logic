@@ -1,0 +1,14 @@
+# The ball is in the box. The box is in the closet.
+
+predicate in {theme: e, reference: e}
+
+entity ball : e
+entity box : e
+entity closet : e
+
+in(theme: ball, reference: box)
+in(theme: box, reference: closet)
+
+rule [x:e, y:e, z:e]: in(theme: x, reference: y) & in(theme: y, reference: z) -> in(theme: x, reference: z)
+
+? in(theme: ball, reference: closet)
