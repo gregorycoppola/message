@@ -2,11 +2,17 @@
 
 predicate rich {theme: e}
 predicate buy_house {theme: e}
+predicate person {theme: e}
 
 entity john : e
 
+person(theme: john)
 not rich(theme: john)
 
+# Default: people usually don't buy houses
+rarely [x:e]: person(theme: x) -> buy_house(theme: x)
+
+# Override: if rich, will buy a house
 always [x:e]: rich(theme: x) -> buy_house(theme: x)
 
 ? buy_house(theme: john)
