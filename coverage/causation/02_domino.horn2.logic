@@ -1,0 +1,15 @@
+# Pushing domino A knocks over B. B knocks over C. C knocks over D.
+# Someone pushed A. Is D knocked over?
+
+entity a : e
+entity b : e
+entity c : e
+entity d : e
+
+push(patient: a)
+
+rule: push(patient: a) -> knocked_over(theme: b)
+rule: knocked_over(theme: b) -> knocked_over(theme: c)
+rule: knocked_over(theme: c) -> knocked_over(theme: d)
+
+? knocked_over(theme: d)
