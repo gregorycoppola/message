@@ -1,0 +1,26 @@
+# Henry is old. Henry is king of France. France is a large country. If an old king rules a large country, he is powerful.
+
+predicate old {theme: e}
+predicate king_of {theme: e, reference: e}
+predicate country {theme: e}
+predicate large {theme: e}
+predicate powerful {theme: e}
+predicate girl {theme: e}
+predicate love {agent: e, patient: e}
+predicate ambitious {theme: e}
+
+entity henry : e
+entity mary : e
+entity france : e
+
+old(theme: henry)
+king_of(theme: henry, reference: france)
+country(theme: france)
+large(theme: france)
+girl(theme: mary)
+love(agent: mary, patient: henry)
+
+rule [x:e, c:e]: old(theme: x) & king_of(theme: x, reference: c) & country(theme: c) & large(theme: c) -> powerful(theme: x)
+rule [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & powerful(theme: y) -> ambitious(theme: x)
+
+? ambitious(theme: mary)

@@ -1,0 +1,12 @@
+# If John were rich, he would buy a house. John is not rich.
+
+predicate rich {theme: e}
+predicate buy_house {theme: e}
+
+entity john : e
+
+not rich(theme: john)
+
+rule [x:e]: rich(theme: x) -> buy_house(theme: x)
+
+? buy_house(theme: john)

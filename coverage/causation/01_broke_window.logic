@@ -1,0 +1,21 @@
+# John threw a rock at the window. If someone throws something at a window, the window breaks. If a window breaks, the owner is upset.
+
+predicate throw {agent: e, patient: e, target: e}
+predicate window {theme: e}
+predicate broken {theme: e}
+predicate owner_of {theme: e, reference: e}
+predicate upset {theme: e}
+
+entity john : e
+entity rock1 : e
+entity window1 : e
+entity owner1 : e
+
+window(theme: window1)
+owner_of(theme: owner1, reference: window1)
+throw(agent: john, patient: rock1, target: window1)
+
+rule [x:e, y:e, w:e]: throw(agent: x, patient: y, target: w) & window(theme: w) -> broken(theme: w)
+rule [w:e, o:e]: broken(theme: w) & owner_of(theme: o, reference: w) -> upset(theme: o)
+
+? upset(theme: owner1)

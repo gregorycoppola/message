@@ -1,0 +1,12 @@
+# If it rains, the ground gets wet. It is raining.
+
+predicate raining {}
+predicate wet {theme: e}
+
+entity ground : e
+
+raining()
+
+rule: raining() -> wet(theme: ground)
+
+? wet(theme: ground)

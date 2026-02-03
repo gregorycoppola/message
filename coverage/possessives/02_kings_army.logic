@@ -1,0 +1,18 @@
+# Henry is king of France. Henry's army is large. If a king's army is large, he is powerful.
+
+predicate king_of {theme: e, reference: e}
+predicate army_of {theme: e, reference: e}
+predicate large {theme: e}
+predicate powerful {theme: e}
+
+entity henry : e
+entity france : e
+entity army1 : e
+
+king_of(theme: henry, reference: france)
+army_of(theme: army1, reference: henry)
+large(theme: army1)
+
+rule [x:e, a:e, c:e]: king_of(theme: x, reference: c) & army_of(theme: a, reference: x) & large(theme: a) -> powerful(theme: x)
+
+? powerful(theme: henry)
