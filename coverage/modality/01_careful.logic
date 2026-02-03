@@ -1,0 +1,22 @@
+# Mary loves a guy in her class. If a woman loves a man in her class, she should be careful.
+
+predicate woman {theme: e}
+predicate man {theme: e}
+predicate love {agent: e, patient: e}
+predicate in_class {theme: e, reference: e}
+predicate should {content: s}
+predicate careful {theme: e}
+
+entity mary : e
+entity guy1 : e
+entity class1 : e
+
+woman(theme: mary)
+man(theme: guy1)
+love(agent: mary, patient: guy1)
+in_class(theme: mary, reference: class1)
+in_class(theme: guy1, reference: class1)
+
+rule [x:e, y:e, c:e]: woman(theme: x) & love(agent: x, patient: y) & man(theme: y) & in_class(theme: x, reference: c) & in_class(theme: y, reference: c) -> should(content: careful(theme: x))
+
+? should(content: careful(theme: mary))

@@ -1,0 +1,17 @@
+# Mary has a dog. Mary's dog is friendly. If someone has a friendly dog, they are approachable.
+
+predicate have {agent: e, patient: e}
+predicate dog {theme: e}
+predicate friendly {theme: e}
+predicate approachable {theme: e}
+
+entity mary : e
+entity dog1 : e
+
+have(agent: mary, patient: dog1)
+dog(theme: dog1)
+friendly(theme: dog1)
+
+rule [x:e, d:e]: have(agent: x, patient: d) & dog(theme: d) & friendly(theme: d) -> approachable(theme: x)
+
+? approachable(theme: mary)

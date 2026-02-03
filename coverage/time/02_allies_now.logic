@@ -1,0 +1,17 @@
+# Jack trusted Jill in the past. Jill trusted Jack in the past. If someone trusted someone in the past, they probably still trust them now. If two people trust each other, they are allies.
+
+predicate trust {agent: e, patient: e, time: e}
+predicate allied {agent: e, patient: e}
+
+entity jack : e
+entity jill : e
+entity past : e
+entity present : e
+
+trust(agent: jack, patient: jill, time: past)
+trust(agent: jill, patient: jack, time: past)
+
+rule [x:e, y:e] (0.7): trust(agent: x, patient: y, time: past) -> trust(agent: x, patient: y, time: present)
+rule [x:e, y:e]: trust(agent: x, patient: y, time: present) & trust(agent: y, patient: x, time: present) -> allied(agent: x, patient: y)
+
+? allied(agent: jack, patient: jill)

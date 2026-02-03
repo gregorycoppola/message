@@ -1,0 +1,12 @@
+# All men are mortal. Zeus is not mortal.
+
+predicate man {theme: e}
+predicate mortal {theme: e}
+
+entity zeus : e
+
+not mortal(theme: zeus)
+
+rule [x:e]: man(theme: x) -> mortal(theme: x)
+
+? man(theme: zeus)

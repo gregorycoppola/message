@@ -1,0 +1,21 @@
+# The dog that bit the mailman belongs to John. If someone's dog bites a person, the owner should apologize.
+
+predicate dog {theme: e}
+predicate bite {agent: e, patient: e}
+predicate person {theme: e}
+predicate belong_to {theme: e, reference: e}
+predicate should {content: s}
+predicate apologize {agent: e}
+
+entity dog1 : e
+entity mailman1 : e
+entity john : e
+
+dog(theme: dog1)
+person(theme: mailman1)
+bite(agent: dog1, patient: mailman1)
+belong_to(theme: dog1, reference: john)
+
+rule [d:e, p:e, o:e]: dog(theme: d) & bite(agent: d, patient: p) & person(theme: p) & belong_to(theme: d, reference: o) -> should(content: apologize(agent: o))
+
+? should(content: apologize(agent: john))
