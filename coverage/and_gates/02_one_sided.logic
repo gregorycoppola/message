@@ -2,12 +2,19 @@
 
 predicate trust {agent: e, patient: e}
 predicate allied {agent: e, patient: e}
+predicate person {theme: e}
 
 entity jack : e
 entity jill : e
 
+person(theme: jack)
+person(theme: jill)
 trust(agent: jack, patient: jill)
 
+# Default: people usually aren't allies
+rarely [x:e, y:e]: person(theme: x) & person(theme: y) -> allied(agent: x, patient: y)
+
+# Override: if they trust each other, they are allies
 always [x:e, y:e]: trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)
 
 ? allied(agent: jack, patient: jill)
