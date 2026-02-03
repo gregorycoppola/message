@@ -1,7 +1,0 @@
-# Socrates is a man. All men are mortal.
-
-entity socrates : man
-
-rule [x:man]: type(x, man) -> type(x, mortal)
-
-? type(socrates, mortal)

@@ -1,9 +1,0 @@
-# Zeus is a god. No gods are mortal. Is Zeus mortal?
-
-entity zeus : e
-
-god(theme: zeus)
-
-rule [x:e]: god(theme: x) -> not mortal(theme: x)
-
-? mortal(theme: zeus)

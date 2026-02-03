@@ -1,9 +1,0 @@
-# Socrates is a man. All men are mortal. Is Socrates mortal?
-
-entity socrates : e
-
-man(theme: socrates)
-
-rule [x:e]: man(theme: x) -> mortal(theme: x)
-
-? mortal(theme: socrates)
