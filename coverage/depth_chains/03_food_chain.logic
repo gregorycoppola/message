@@ -9,8 +9,8 @@ entity sparrow1 : e
 
 bird(theme: sparrow1)
 
-rule [x:e]: bird(theme: x) -> animal(theme: x)
-rule [x:e]: animal(theme: x) -> organism(theme: x)
-rule [x:e]: organism(theme: x) -> mortal(theme: x)
+always [x:e]: bird(theme: x) -> animal(theme: x)
+always [x:e]: animal(theme: x) -> organism(theme: x)
+always [x:e]: organism(theme: x) -> mortal(theme: x)
 
 ? mortal(theme: sparrow1)

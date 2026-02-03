@@ -8,7 +8,7 @@ entity fluffy : e
 
 poodle(theme: fluffy)
 
-rule [x:e]: poodle(theme: x) -> dog(theme: x)
-rule [x:e]: dog(theme: x) -> animal(theme: x)
+always [x:e]: poodle(theme: x) -> dog(theme: x)
+always [x:e]: dog(theme: x) -> animal(theme: x)
 
 ? animal(theme: fluffy)

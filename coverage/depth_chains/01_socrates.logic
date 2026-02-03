@@ -7,6 +7,6 @@ entity socrates : e
 
 man(theme: socrates)
 
-rule [x:e]: man(theme: x) -> mortal(theme: x)
+always [x:e]: man(theme: x) -> mortal(theme: x)
 
 ? mortal(theme: socrates)
