@@ -1,0 +1,7 @@
+# It is raining. If it is raining, you should bring an umbrella.
+
+raining()
+
+rule: raining() -> should(content: bring_umbrella())
+
+? should(content: bring_umbrella())
