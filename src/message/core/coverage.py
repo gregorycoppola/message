@@ -24,6 +24,7 @@ class CoverageStatus:
 
 
 def scan_tests(coverage_dir: str) -> list[CoverageTest]:
+    """Scan coverage directory for test cases."""
     root = Path(coverage_dir)
     tests = []
 
@@ -58,12 +59,13 @@ def scan_tests(coverage_dir: str) -> list[CoverageTest]:
     return tests
 
 
-def coverage_status(tests: list[CoverageTest], version: str, coverage_dir: str) -> list[CoverageStatus]:
+def coverage_status(tests: list[CoverageTest], coverage_dir: str) -> list[CoverageStatus]:
+    """Check which tests have .logic files."""
     root = Path(coverage_dir)
     statuses = []
 
     for test in tests:
-        logic_file = root / test.group / f"{test.name}.{version}.logic"
+        logic_file = root / test.group / f"{test.name}.logic"
         statuses.append(CoverageStatus(
             group=test.group,
             name=test.name,

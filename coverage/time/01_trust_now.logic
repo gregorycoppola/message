@@ -1,5 +1,4 @@
-# Jack trusted Jill in the past. If someone trusted someone in the past,
-# they probably still trust them now.
+# Jack trusted Jill in the past. If someone trusted someone in the past, they probably still trust them now.
 
 entity jack : e
 entity jill : e

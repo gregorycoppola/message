@@ -1,5 +1,4 @@
-# Pushing domino A knocks over B. B knocks over C. C knocks over D.
-# Someone pushed A. Is D knocked over?
+# Pushing domino A knocks over B, B knocks over C, C knocks over D. Someone pushed A.
 
 entity a : e
 entity b : e
