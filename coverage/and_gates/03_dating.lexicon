@@ -1,0 +1,11 @@
+predicate like {agent: e, patient: e}
+  "to find pleasant or attractive"
+
+predicate dating {agent: e, patient: e}
+  "to be in a romantic relationship with"
+
+entity jack : e
+  "a person named Jack"
+
+entity jill : e
+  "a person named Jill"

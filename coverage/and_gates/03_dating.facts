@@ -1,0 +1,3 @@
+like(agent: jack, patient: jill)
+like(agent: jill, patient: jack)
+always [x:e, y:e]: like(agent: x, patient: y) & like(agent: y, patient: x) -> dating(agent: x, patient: y)
