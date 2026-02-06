@@ -1,0 +1,5 @@
+girl(theme: mary)
+man(theme: m1)
+tall(theme: m1)
+love(agent: mary, patient: m1)
+always [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & man(theme: y) & tall(theme: y) -> romantic(theme: x)

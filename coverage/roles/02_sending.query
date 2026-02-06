@@ -1,1 +1,1 @@
-Did Bob receive a letter?
+? receive(agent: bob, patient: letter1)
