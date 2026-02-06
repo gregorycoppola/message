@@ -1,0 +1,2 @@
+raining()
+always: raining() -> wet(theme: ground)
