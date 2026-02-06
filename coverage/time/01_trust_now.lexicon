@@ -1,0 +1,14 @@
+predicate trust {agent: e, patient: e, time: e}
+  "to have confidence in at a time"
+
+entity jack : e
+  "a person named Jack"
+
+entity jill : e
+  "a person named Jill"
+
+entity past : e
+  "the past"
+
+entity present : e
+  "the present"

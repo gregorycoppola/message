@@ -1,1 +1,1 @@
-Is Paris north of Marseille?
+? north_of(theme: paris, reference: marseille)

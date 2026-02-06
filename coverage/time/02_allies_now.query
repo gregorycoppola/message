@@ -1,1 +1,1 @@
-Are Jack and Jill allies now?
+? allied(agent: jack, patient: jill)

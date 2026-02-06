@@ -1,1 +1,1 @@
-Is Mary married to John?
+? married(agent: mary, patient: john)
