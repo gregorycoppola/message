@@ -1,0 +1,20 @@
+predicate girl {theme: e}
+  "a young female human"
+
+predicate man {theme: e}
+  "an adult male human"
+
+predicate love {agent: e, patient: e, degree: e}
+  "to have deep affection for"
+
+predicate devoted {theme: e}
+  "deeply committed or loyal"
+
+entity mary : e
+  "a woman named Mary"
+
+entity henry : e
+  "a man named Henry"
+
+entity high : e
+  "a high degree"

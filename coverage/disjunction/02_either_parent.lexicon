@@ -1,0 +1,17 @@
+predicate mother_of {agent: e, patient: e}
+  "to be the female parent of"
+
+predicate father_of {agent: e, patient: e}
+  "to be the male parent of"
+
+predicate parent_of {agent: e, patient: e}
+  "to be a parent of"
+
+entity alice : e
+  "a person named Alice"
+
+entity bob : e
+  "a person named Bob"
+
+entity carol : e
+  "a person named Carol"
