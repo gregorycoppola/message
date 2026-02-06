@@ -1,0 +1,11 @@
+predicate trust {agent: e, patient: e}
+  "to have confidence in someone"
+
+predicate allied {agent: e, patient: e}
+  "to be in alliance with"
+
+entity jack : e
+  "a person named Jack"
+
+entity jill : e
+  "a person named Jill"
