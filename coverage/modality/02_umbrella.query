@@ -1,1 +1,1 @@
-Should you bring an umbrella?
+? should(content: bring_umbrella())

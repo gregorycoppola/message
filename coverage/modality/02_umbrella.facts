@@ -1,0 +1,2 @@
+raining()
+always: raining() -> should(content: bring_umbrella())
