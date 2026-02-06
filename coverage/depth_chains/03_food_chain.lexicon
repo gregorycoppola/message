@@ -1,0 +1,14 @@
+predicate bird {theme: e}
+  "a feathered flying animal"
+
+predicate animal {theme: e}
+  "a living organism that is not a plant"
+
+predicate organism {theme: e}
+  "a living thing"
+
+predicate mortal {theme: e}
+  "subject to death"
+
+entity sparrow1 : e
+  "a sparrow"
