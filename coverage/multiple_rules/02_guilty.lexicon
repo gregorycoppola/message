@@ -1,0 +1,20 @@
+predicate at_scene {theme: e, reference: e}
+  "present at a location"
+
+predicate has_motive {theme: e}
+  "having a reason to commit an act"
+
+predicate owns {agent: e, patient: e}
+  "to possess something"
+
+predicate guilty {theme: e}
+  "responsible for a wrongdoing"
+
+entity suspect1 : e
+  "a suspect"
+
+entity scene1 : e
+  "the crime scene"
+
+entity weapon1 : e
+  "the weapon"
