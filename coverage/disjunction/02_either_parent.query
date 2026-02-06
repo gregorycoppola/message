@@ -1,1 +1,1 @@
-Is Alice Bob's parent?
+? parent_of(agent: alice, patient: bob)

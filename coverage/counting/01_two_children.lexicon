@@ -1,0 +1,17 @@
+predicate son_of {theme: e, reference: e}
+  "to be a male child of"
+
+predicate daughter_of {theme: e, reference: e}
+  "to be a female child of"
+
+predicate has_two_children {theme: e}
+  "to have exactly two children"
+
+entity alice : e
+  "a person named Alice"
+
+entity bob : e
+  "a person named Bob"
+
+entity carol : e
+  "a person named Carol"
