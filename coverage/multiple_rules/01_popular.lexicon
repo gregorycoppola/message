@@ -1,0 +1,11 @@
+predicate funny {theme: e}
+  "causing laughter or amusement"
+
+predicate kind {theme: e}
+  "friendly and generous"
+
+predicate liked {theme: e}
+  "regarded with affection by others"
+
+entity jack : e
+  "a person named Jack"

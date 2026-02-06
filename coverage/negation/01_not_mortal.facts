@@ -1,0 +1,2 @@
+god(theme: zeus)
+never [x:e]: god(theme: x) -> mortal(theme: x)
