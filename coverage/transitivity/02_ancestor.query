@@ -1,1 +1,1 @@
-Is Alice Carol's grandparent?
+? grandparent_of(agent: alice, patient: carol)

@@ -1,1 +1,1 @@
-Does Jack trust Jill now?
+? trust(agent: jack, patient: jill, time: present)

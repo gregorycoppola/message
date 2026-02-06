@@ -1,1 +1,1 @@
-Is Alice taller than Carol?
+? taller_than(theme: alice, reference: carol)

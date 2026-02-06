@@ -1,0 +1,2 @@
+trust(agent: jack, patient: jill, time: past)
+usually [x:e, y:e]: trust(agent: x, patient: y, time: past) -> trust(agent: x, patient: y, time: present)

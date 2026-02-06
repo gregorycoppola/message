@@ -1,1 +1,1 @@
-Do the Joneses live next to the Smiths?
+? live_next_to(agent: joneses, patient: smiths)

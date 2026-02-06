@@ -1,0 +1,20 @@
+predicate on_team {theme: e, reference: e}
+  "to be a member of a team"
+
+predicate full {theme: e}
+  "having no more capacity"
+
+predicate not_equal {theme: e, reference: e}
+  "to be different from"
+
+entity alice : e
+  "a person named Alice"
+
+entity bob : e
+  "a person named Bob"
+
+entity carol : e
+  "a person named Carol"
+
+entity team1 : e
+  "a team"
