@@ -1,1 +1,1 @@
-Should John apologize?
+? should(content: apologize(agent: john))

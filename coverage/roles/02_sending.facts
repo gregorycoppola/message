@@ -1,0 +1,2 @@
+send(agent: alice, patient: letter1, recipient: bob, source: london)
+always [a:e, p:e, r:e, s:e]: send(agent: a, patient: p, recipient: r, source: s) -> receive(agent: r, patient: p)

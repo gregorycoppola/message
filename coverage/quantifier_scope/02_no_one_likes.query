@@ -1,1 +1,1 @@
-Does Tom like broccoli?
+? like(agent: tom, patient: broccoli)
