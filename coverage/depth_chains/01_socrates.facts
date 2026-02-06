@@ -1,0 +1,2 @@
+man(theme: socrates)
+always [x:e]: man(theme: x) -> mortal(theme: x)
