@@ -1,4 +1,0 @@
-push(patient: a)
-always: push(patient: a) -> knocked_over(theme: b)
-always: knocked_over(theme: b) -> knocked_over(theme: c)
-always: knocked_over(theme: c) -> knocked_over(theme: d)

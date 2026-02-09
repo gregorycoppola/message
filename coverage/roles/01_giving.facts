@@ -1,2 +1,0 @@
-give(agent: john, patient: book1, recipient: mary)
-always [x:e, y:e, z:e]: give(agent: x, patient: y, recipient: z) -> have(agent: z, patient: y)
