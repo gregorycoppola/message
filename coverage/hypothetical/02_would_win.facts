@@ -1,2 +1,2 @@
 practice_daily(theme: team1)
-likely [x:e]: practice_daily(theme: x) -> win_championship(theme: x)
+always [x:e]: practice_daily(theme: x) -> win_championship(theme: x)
