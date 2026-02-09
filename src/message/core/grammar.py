@@ -169,11 +169,19 @@ def _try_match(pattern: list[PatternSlot], tokens: list[str], lexicon) -> dict |
     return _match_recursive(pattern, 0, tokens, 0, bindings, lexicon)
 
 
-def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
+# 📄 message/src/message/core/grammar.py
+# Replace the _match_recursive function with this version that has optional debug:
+
+def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon, debug=False) -> dict | None:
     """Recursive pattern matcher with backtracking."""
-    # Skip trailing ignored tokens
-    while ti < len(tokens) and _clean(tokens[ti]) in IGNORED:
-        ti += 1
+    # Skip trailing ignored tokens — but NOT if next pattern slot is _ or lit
+    skip_ignored = True
+    if pi < len(pattern) and pattern[pi].kind in ("ignore", "lit"):
+        skip_ignored = False
+
+    if skip_ignored:
+        while ti < len(tokens) and _clean(tokens[ti]) in IGNORED:
+            ti += 1
 
     # Both exhausted — success
     if pi >= len(pattern) and ti >= len(tokens):
@@ -214,7 +222,6 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         return None
 
     elif slot.kind == "var":
-        # Try to match token against lexicon
         lookup = lexicon.lookup(token)
         if not lookup:
             if token in IGNORED:
@@ -223,7 +230,6 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
 
         canonical, category = lookup
 
-        # Check type constraint
         if slot.type_constraint:
             actual_type = lexicon.get_type(canonical)
             if actual_type != slot.type_constraint:
@@ -231,13 +237,11 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
                     return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
                 return None
 
-        # Bind variable
         actual_type = lexicon.get_type(canonical)
         bindings[slot.name] = (canonical, actual_type)
         result = _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
         if result is not None:
             return result
-        # Backtrack
         del bindings[slot.name]
 
         if token in IGNORED:
@@ -246,7 +250,6 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         return None
 
     return None
-
 
 def _clean(token: str) -> str:
     """Lowercase and strip trailing punctuation."""
