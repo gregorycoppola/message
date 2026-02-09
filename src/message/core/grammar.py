@@ -15,6 +15,7 @@ Pattern elements:
   - "IF"                — match conditional marker
   - "THEN"              — match consequent marker
   - "AND"               — match conjunction
+  - "LIT:word"          — match a literal word exactly
   - "_"                 — match and ignore any single token
 """
 
@@ -25,9 +26,9 @@ from dataclasses import dataclass, field
 # Grammar keywords — surface forms that map to grammar symbols
 KEYWORDS = {
     "COP": {"is", "are", "was", "were", "am", "be"},
-    "ALL": {"all", "every", "each"},
+    "ALL": {"all", "every"},
     "IF": {"if", "when", "whenever"},
-    "THEN": {"then", ","},
+    "THEN": {"then"},
     "AND": {"and", "&"},
     "NOT": {"not", "never", "no"},
     "A": {"a", "an"},
@@ -46,10 +47,11 @@ IGNORED = {".", ",", "!", "?", "the", "it", "they", "he", "she", "them"}
 @dataclass
 class PatternSlot:
     """A single slot in a grammar rule pattern."""
-    kind: str  # "var", "keyword", "ignore"
+    kind: str  # "var", "keyword", "ignore", "lit"
     name: str | None = None  # variable name like "$x", "$P", "$V"
     type_constraint: str | None = None  # "e" or "{theme:e}" or "{agent:e,patient:e}"
     keyword: str | None = None  # "COP", "ALL", etc.
+    literal: str | None = None  # for LIT:word — exact word match
 
 
 @dataclass
@@ -67,6 +69,8 @@ class GrammarRule:
                 slots.append(f"{s.name}:{s.type_constraint}")
             elif s.kind == "keyword":
                 slots.append(s.keyword)
+            elif s.kind == "lit":
+                slots.append(f"'{s.literal}'")
             else:
                 slots.append("_")
         return f"Rule({self.name}: {' '.join(slots)} → {self.template})"
@@ -82,6 +86,8 @@ def _slot(spec: str) -> PatternSlot:
             name, type_str = spec.split(":", 1)
             return PatternSlot(kind="var", name=name, type_constraint=type_str)
         return PatternSlot(kind="var", name=spec)
+    if spec.startswith("LIT:"):
+        return PatternSlot(kind="lit", literal=spec[4:].lower())
     # Keyword
     return PatternSlot(kind="keyword", keyword=spec)
 
@@ -115,9 +121,6 @@ GRAMMAR: list[GrammarRule] = [
           "always [x:e]: $P(theme: x) -> $Q(theme: x)",
           "rule"),
 
-    # --- Copular universal with article: "All poodles are dogs" ---
-    # (same pattern — "poodles" and "dogs" are both {theme:e})
-
     # --- Copular generic: "A sparrow is a bird" ---
     _rule("copular_generic",
           "A $P:{theme:e} COP _ $Q:{theme:e}",
@@ -130,16 +133,13 @@ GRAMMAR: list[GrammarRule] = [
           "$V(agent: $x, patient: $y)",
           "fact"),
 
-    # --- Transitive fact with article: "Mary loves a man" ---
-    # TODO: need to handle indefinite objects
+    # --- Reciprocal conditional: "If two P V each other, they are R" ---
+    _rule("reciprocal_conditional",
+          "IF _ $P:{theme:e} $V:{agent:e,patient:e} LIT:each LIT:other _ COP $R:{agent:e,patient:e}",
+          "always [x:e, y:e]: $P(theme: x) & $P(theme: y) & $V(agent: x, patient: y) & $V(agent: y, patient: x) -> $R(agent: x, patient: y)",
+          "rule"),
 
-    # --- Three-place fact: "John threw a rock at the window" ---
-    # TODO: prepositions as role markers
-
-    # --- Conditional with copular: "If X is Y, then Z" ---
-    # TODO: complex conditionals
-
-    # --- Intransitive fact: "It is raining" ---
+    # --- Zero-arg fact: "It is raining" ---
     _rule("zero_arg_fact",
           "$P:{}",
           "$P()",
@@ -148,15 +148,7 @@ GRAMMAR: list[GrammarRule] = [
 
 
 def match_sentence(tokens: list[str], lexicon) -> list[dict]:
-    """Try all grammar rules against a token sequence. Returns list of matches.
-
-    Each match is:
-        {
-            "rule": GrammarRule,
-            "bindings": {var_name: (canonical, type)},
-            "output": str  — the derived logical form
-        }
-    """
+    """Try all grammar rules against a token sequence. Returns list of matches."""
     matches = []
     for rule in GRAMMAR:
         bindings = _try_match(rule.pattern, tokens, lexicon)
@@ -172,10 +164,7 @@ def match_sentence(tokens: list[str], lexicon) -> list[dict]:
 
 
 def _try_match(pattern: list[PatternSlot], tokens: list[str], lexicon) -> dict | None:
-    """Try to match a pattern against tokens. Returns bindings or None.
-
-    Uses backtracking to handle ignored tokens (articles, punctuation).
-    """
+    """Try to match a pattern against tokens. Returns bindings or None."""
     bindings = {}
     return _match_recursive(pattern, 0, tokens, 0, bindings, lexicon)
 
@@ -183,16 +172,16 @@ def _try_match(pattern: list[PatternSlot], tokens: list[str], lexicon) -> dict |
 def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
     """Recursive pattern matcher with backtracking."""
     # Skip trailing ignored tokens
-    while ti < len(tokens) and tokens[ti].lower().rstrip(".,!?") in IGNORED:
+    while ti < len(tokens) and _clean(tokens[ti]) in IGNORED:
         ti += 1
 
     # Both exhausted — success
     if pi >= len(pattern) and ti >= len(tokens):
         return dict(bindings)
 
-    # Pattern exhausted but tokens remain (skip trailing punctuation/ignored)
+    # Pattern exhausted but tokens remain
     if pi >= len(pattern):
-        while ti < len(tokens) and tokens[ti].lower().rstrip(".,!?") in IGNORED:
+        while ti < len(tokens) and _clean(tokens[ti]) in IGNORED:
             ti += 1
         return dict(bindings) if ti >= len(tokens) else None
 
@@ -201,18 +190,25 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         return None
 
     slot = pattern[pi]
-    token = tokens[ti].lower().rstrip(".,!?")
+    token = _clean(tokens[ti])
 
     if slot.kind == "ignore":
         # Match any single token
         return _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
 
+    elif slot.kind == "lit":
+        # Match exact literal word
+        if token == slot.literal:
+            return _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
+        # Try skipping ignored token
+        if token in IGNORED:
+            return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
+        return None
+
     elif slot.kind == "keyword":
-        # Check if token is this keyword
         expected_forms = KEYWORDS.get(slot.keyword, set())
         if token in expected_forms:
             return _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
-        # Also try skipping an ignored token first
         if token in IGNORED:
             return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
         return None
@@ -221,7 +217,6 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         # Try to match token against lexicon
         lookup = lexicon.lookup(token)
         if not lookup:
-            # Not in lexicon — try skipping as ignored
             if token in IGNORED:
                 return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
             return None
@@ -232,7 +227,6 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         if slot.type_constraint:
             actual_type = lexicon.get_type(canonical)
             if actual_type != slot.type_constraint:
-                # Type mismatch — try skipping as ignored
                 if token in IGNORED:
                     return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
                 return None
@@ -246,13 +240,17 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         # Backtrack
         del bindings[slot.name]
 
-        # Try skipping this token as ignored
         if token in IGNORED:
             return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
 
         return None
 
     return None
+
+
+def _clean(token: str) -> str:
+    """Lowercase and strip trailing punctuation."""
+    return token.lower().rstrip(".,!?;:")
 
 
 def _apply_template(template: str, bindings: dict) -> str:
