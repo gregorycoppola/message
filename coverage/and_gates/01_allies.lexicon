@@ -1,3 +1,6 @@
+predicate person {theme: e}
+  forms: person, people
+  "a human being"
 predicate trust {agent: e, patient: e}
   forms: trust, trusts, trusted, trusting
   "to have confidence in someone"
