@@ -1,11 +1,12 @@
 predicate north_of {theme: e, reference: e}
-  "to be located north of"
-
+  forms: north
+  "located further north than"
 entity paris : e
-  "the city of Paris"
-
+  forms: Paris, paris
+  "capital of France"
 entity lyon : e
-  "the city of Lyon"
-
+  forms: Lyon, lyon
+  "city in France"
 entity marseille : e
-  "the city of Marseille"
+  forms: Marseille, marseille
+  "city in southern France"

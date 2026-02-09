@@ -32,6 +32,7 @@ KEYWORDS = {
     "AND": {"and", "&"},
     "NOT": {"not", "never", "no"},
     "A": {"a", "an"},
+    "SOMEONE": {"someone", "somebody", "anyone"},
 }
 
 # Reverse index: surface form -> keyword
@@ -41,7 +42,7 @@ for kw, forms in KEYWORDS.items():
         KEYWORD_INDEX[form.lower()] = kw
 
 # Ignored tokens — matched by "_" or skipped
-IGNORED = {".", ",", "!", "?", "the", "it", "they", "he", "she", "them"}
+IGNORED = {".", ",", "!", "?", "the", "it", "they", "he", "she", "them", "to", "of", "than"}
 
 
 @dataclass
@@ -115,10 +116,22 @@ GRAMMAR: list[GrammarRule] = [
           "$P(theme: $x)",
           "fact"),
 
+    # --- Negated copular fact: "Zeus is not mortal" ---
+    _rule("negated_copular_fact",
+          "$x:e COP NOT $P:{theme:e}",
+          "not $P(theme: $x)",
+          "fact"),
+
     # --- Copular universal: "All men are mortal" ---
     _rule("copular_universal",
           "ALL $P:{theme:e} COP $Q:{theme:e}",
           "always [x:e]: $P(theme: x) -> $Q(theme: x)",
+          "rule"),
+
+    # --- Negated universal: "No gods are mortal" ---
+    _rule("negated_universal",
+          "NOT $P:{theme:e} COP $Q:{theme:e}",
+          "never [x:e]: $P(theme: x) -> $Q(theme: x)",
           "rule"),
 
     # --- Copular generic: "A sparrow is a bird" ---
@@ -127,16 +140,52 @@ GRAMMAR: list[GrammarRule] = [
           "always [x:e]: $P(theme: x) -> $Q(theme: x)",
           "rule"),
 
+    # --- Prepositional copular fact: "Alice is taller than Bob" / "Paris is north of Lyon" / "The ball is in the box" ---
+    _rule("prepositional_copular_fact",
+          "$x:e COP $V:{theme:e,reference:e} $y:e",
+          "$V(theme: $x, reference: $y)",
+          "fact"),
+
+    # --- Copular identity: "Clark Kent is Superman" ---
+    _rule("copular_identity",
+          "$x:e COP $y:e",
+          "identity(theme: $x, reference: $y)",
+          "fact"),
+
     # --- Transitive fact: "Jack trusts Jill" ---
     _rule("transitive_fact",
           "$x:e $V:{agent:e,patient:e} $y:e",
           "$V(agent: $x, patient: $y)",
           "fact"),
 
+    # --- Intransitive predicate fact: "Superman can fly" ---
+    _rule("intransitive_fact",
+          "$x:e $P:{theme:e}",
+          "$P(theme: $x)",
+          "fact"),
+
     # --- Reciprocal conditional: "If two P V each other, they are R" ---
     _rule("reciprocal_conditional",
           "IF _ $P:{theme:e} $V:{agent:e,patient:e} LIT:each LIT:other _ COP $R:{agent:e,patient:e}",
           "always [x:e, y:e]: $P(theme: x) & $P(theme: y) & $V(agent: x, patient: y) & $V(agent: y, patient: x) -> $R(agent: x, patient: y)",
+          "rule"),
+
+    # --- Conditional copular: "If someone is funny, people like them" ---
+    _rule("conditional_someone_copular",
+          "IF SOMEONE COP $P:{theme:e} _ _ _",
+          "always [x:e]: $P(theme: x) -> $Q(theme: x)",
+          "rule"),
+
+    # --- Conditional symmetry: "If X is R to Y, then Y is R to X" ---
+    _rule("conditional_symmetry",
+          "IF $x:e COP $V:{agent:e,patient:e} $y:e THEN $y2:e COP $V2:{agent:e,patient:e} $x2:e",
+          "always [x:e, y:e]: $V(agent: x, patient: y) -> $V(agent: y, patient: x)",
+          "rule"),
+
+    # --- Conditional transitivity (explicit): "If X is in Y and Y is in Z, then X is in Z" ---
+    _rule("conditional_transitivity",
+          "IF $a:e COP $V:{theme:e,reference:e} $b:e AND $c:e COP $V2:{theme:e,reference:e} $d:e THEN $e:e COP $V3:{theme:e,reference:e} $f:e",
+          "always [x:e, y:e, z:e]: $V(theme: x, reference: y) & $V(theme: y, reference: z) -> $V(theme: x, reference: z)",
           "rule"),
 
     # --- Zero-arg fact: "It is raining" ---
@@ -169,10 +218,7 @@ def _try_match(pattern: list[PatternSlot], tokens: list[str], lexicon) -> dict |
     return _match_recursive(pattern, 0, tokens, 0, bindings, lexicon)
 
 
-# 📄 message/src/message/core/grammar.py
-# Replace the _match_recursive function with this version that has optional debug:
-
-def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon, debug=False) -> dict | None:
+def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
     """Recursive pattern matcher with backtracking."""
     # Skip trailing ignored tokens — but NOT if next pattern slot is _ or lit
     skip_ignored = True
@@ -222,6 +268,7 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon, debug=False) ->
         return None
 
     elif slot.kind == "var":
+        # Try to match token against lexicon
         lookup = lexicon.lookup(token)
         if not lookup:
             if token in IGNORED:
@@ -230,6 +277,7 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon, debug=False) ->
 
         canonical, category = lookup
 
+        # Check type constraint
         if slot.type_constraint:
             actual_type = lexicon.get_type(canonical)
             if actual_type != slot.type_constraint:
@@ -237,11 +285,13 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon, debug=False) ->
                     return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
                 return None
 
+        # Bind variable
         actual_type = lexicon.get_type(canonical)
         bindings[slot.name] = (canonical, actual_type)
         result = _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
         if result is not None:
             return result
+        # Backtrack
         del bindings[slot.name]
 
         if token in IGNORED:
@@ -250,6 +300,7 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon, debug=False) ->
         return None
 
     return None
+
 
 def _clean(token: str) -> str:
     """Lowercase and strip trailing punctuation."""
