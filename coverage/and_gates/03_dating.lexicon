@@ -1,11 +1,15 @@
+predicate person {theme: e}
+  forms: person, people
+  "a human being"
 predicate like {agent: e, patient: e}
+  forms: like, likes, liked, liking
   "to find pleasant or attractive"
-
 predicate dating {agent: e, patient: e}
-  "to be in a romantic relationship with"
-
+  forms: dating
+  "to be in a romantic relationship"
 entity jack : e
+  forms: Jack, jack
   "a person named Jack"
-
 entity jill : e
+  forms: Jill, jill
   "a person named Jill"
