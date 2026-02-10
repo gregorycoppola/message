@@ -170,12 +170,6 @@ GRAMMAR: list[GrammarRule] = [
           "always [x:e, y:e]: $P(theme: x) & $P(theme: y) & $V(agent: x, patient: y) & $V(agent: y, patient: x) -> $R(agent: x, patient: y)",
           "rule"),
 
-    # --- Conditional copular: "If someone is funny, people like them" ---
-    _rule("conditional_someone_copular",
-          "IF SOMEONE COP $P:{theme:e} _ _ _",
-          "always [x:e]: $P(theme: x) -> $Q(theme: x)",
-          "rule"),
-
     # --- Conditional symmetry: "If X is R to Y, then Y is R to X" ---
     _rule("conditional_symmetry",
           "IF $x:e COP $V:{agent:e,patient:e} $y:e THEN $y2:e COP $V2:{agent:e,patient:e} $x2:e",
@@ -268,32 +262,32 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         return None
 
     elif slot.kind == "var":
-        # Try to match token against lexicon
-        lookup = lexicon.lookup(token)
-        if not lookup:
-            if token in IGNORED:
-                return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
-            return None
+        # Try to match token(s) against lexicon using multi-word lookup
+        lookup = lexicon.lookup_at(tokens, ti)
+        if lookup:
+            canonical, category, consumed = lookup
 
-        canonical, category = lookup
+            # Check type constraint
+            if slot.type_constraint:
+                actual_type = lexicon.get_type(canonical)
+                if actual_type == slot.type_constraint:
+                    # Bind variable
+                    bindings[slot.name] = (canonical, actual_type)
+                    result = _match_recursive(pattern, pi + 1, tokens, ti + consumed, bindings, lexicon)
+                    if result is not None:
+                        return result
+                    # Backtrack
+                    del bindings[slot.name]
+            else:
+                # No type constraint — accept any lexicon match
+                actual_type = lexicon.get_type(canonical)
+                bindings[slot.name] = (canonical, actual_type)
+                result = _match_recursive(pattern, pi + 1, tokens, ti + consumed, bindings, lexicon)
+                if result is not None:
+                    return result
+                del bindings[slot.name]
 
-        # Check type constraint
-        if slot.type_constraint:
-            actual_type = lexicon.get_type(canonical)
-            if actual_type != slot.type_constraint:
-                if token in IGNORED:
-                    return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
-                return None
-
-        # Bind variable
-        actual_type = lexicon.get_type(canonical)
-        bindings[slot.name] = (canonical, actual_type)
-        result = _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
-        if result is not None:
-            return result
-        # Backtrack
-        del bindings[slot.name]
-
+        # No lexicon match or type mismatch — try skipping as ignored
         if token in IGNORED:
             return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
 
