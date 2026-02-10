@@ -81,6 +81,12 @@ GRAMMAR = [
           "always [x:e, y:e]: $P(theme: x) & $V(agent: x, patient: y) & $Q(theme: y) -> $R(theme: x)",
           "rule"),
 
+    # --- Conditional someone copular: "If someone is funny, they are liked" ---
+    _rule("conditional_someone_copular",
+          "IF SOMEONE COP $P:{theme:e} _ COP $Q:{theme:e}",
+          "always [x:e]: $P(theme: x) -> $Q(theme: x)",
+          "rule"),
+
     # --- Conditional symmetry: "If X is R to Y, then Y is R to X" ---
     _rule("conditional_symmetry",
           "IF $x:e COP $V:{agent:e,patient:e} $y:e THEN $y2:e COP $V2:{agent:e,patient:e} $x2:e",
