@@ -1,29 +1,30 @@
 predicate man {theme: e}
+  forms: man, men
   "an adult male human"
-
 predicate girl {theme: e}
+  forms: girl, girls
   "a young female human"
-
 predicate king_of {theme: e, reference: e}
+  forms: king
   "to be the monarch of"
-
 predicate country {theme: e}
+  forms: country, countries
   "a nation or state"
-
 predicate love {agent: e, patient: e}
+  forms: love, loves, loved, loving
   "to have deep affection for"
-
 predicate successful {theme: e}
+  forms: successful
   "having achieved wealth or status"
-
 predicate ambitious {theme: e}
+  forms: ambitious
   "having a strong desire for success"
-
 entity henry : e
+  forms: Henry, henry
   "a man named Henry"
-
 entity mary : e
+  forms: Mary, mary
   "a woman named Mary"
-
 entity france : e
+  forms: France, france
   "the country of France"
