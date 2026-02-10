@@ -1,3 +1,0 @@
-in(theme: ball, reference: box)
-in(theme: box, reference: closet)
-always [x:e, y:e, z:e]: in(theme: x, reference: y) & in(theme: y, reference: z) -> in(theme: x, reference: z)

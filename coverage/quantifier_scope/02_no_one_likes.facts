@@ -1,2 +1,0 @@
-person(theme: tom)
-never [x:e]: person(theme: x) -> like(agent: x, patient: broccoli)
