@@ -1,10 +1,5 @@
 """
-Grammar rules for mapping typed token sequences to logical forms.
-
-Each rule has:
-  - A name
-  - A pattern: sequence of typed slots and keywords
-  - A semantic template: how to produce the logical output
+Grammar engine — pattern matching and semantic template application.
 
 Pattern elements:
   - "$x:e"              — match a token that resolves to an entity
@@ -50,10 +45,10 @@ IGNORED = {".", ",", "!", "?", "the", "it", "they", "he", "she", "them", "to", "
 class PatternSlot:
     """A single slot in a grammar rule pattern."""
     kind: str  # "var", "keyword", "ignore", "lit"
-    name: str | None = None  # variable name like "$x", "$P", "$V"
-    type_constraint: str | None = None  # "e" or "{theme:e}" or "{agent:e,patient:e}"
-    keyword: str | None = None  # "COP", "ALL", etc.
-    literal: str | None = None  # for LIT:word — exact word match
+    name: str | None = None
+    type_constraint: str | None = None
+    keyword: str | None = None
+    literal: str | None = None
 
 
 @dataclass
@@ -61,8 +56,8 @@ class GrammarRule:
     """A grammar rule: pattern → semantic template."""
     name: str
     pattern: list[PatternSlot]
-    template: str  # semantic output template with $variables
-    output_type: str = "fact"  # "fact" or "rule"
+    template: str
+    output_type: str = "fact"
 
     def __repr__(self):
         slots = []
@@ -83,128 +78,25 @@ def _slot(spec: str) -> PatternSlot:
     if spec == "_":
         return PatternSlot(kind="ignore")
     if spec.startswith("$"):
-        # Variable: $x:e or $P:{theme:e}
         if ":" in spec:
             name, type_str = spec.split(":", 1)
             return PatternSlot(kind="var", name=name, type_constraint=type_str)
         return PatternSlot(kind="var", name=spec)
     if spec.startswith("LIT:"):
         return PatternSlot(kind="lit", literal=spec[4:].lower())
-    # Keyword
     return PatternSlot(kind="keyword", keyword=spec)
 
 
 def _rule(name: str, pattern_str: str, template: str, output_type: str = "fact") -> GrammarRule:
-    """Convenience: build a rule from a pattern string."""
+    """Build a rule from a pattern string."""
     slots = [_slot(s) for s in pattern_str.split()]
     return GrammarRule(name=name, pattern=slots, template=template, output_type=output_type)
 
 
-# ============================================================
-# THE GRAMMAR
-# ============================================================
-
-GRAMMAR: list[GrammarRule] = [
-    # --- Copular facts: "Bob is a poodle" ---
-    _rule("copular_fact",
-          "$x:e COP A $P:{theme:e}",
-          "$P(theme: $x)",
-          "fact"),
-
-    # --- Copular facts without article: "Bob is mortal" ---
-    _rule("copular_fact_bare",
-          "$x:e COP $P:{theme:e}",
-          "$P(theme: $x)",
-          "fact"),
-
-    # --- Negated copular fact: "Zeus is not mortal" ---
-    _rule("negated_copular_fact",
-          "$x:e COP NOT $P:{theme:e}",
-          "not $P(theme: $x)",
-          "fact"),
-
-    # --- Copular universal: "All men are mortal" ---
-    _rule("copular_universal",
-          "ALL $P:{theme:e} COP $Q:{theme:e}",
-          "always [x:e]: $P(theme: x) -> $Q(theme: x)",
-          "rule"),
-
-    # --- Negated universal: "No gods are mortal" ---
-    _rule("negated_universal",
-          "NOT $P:{theme:e} COP $Q:{theme:e}",
-          "never [x:e]: $P(theme: x) -> $Q(theme: x)",
-          "rule"),
-
-    # --- Copular generic: "A sparrow is a bird" ---
-    _rule("copular_generic",
-          "A $P:{theme:e} COP A $Q:{theme:e}",
-          "always [x:e]: $P(theme: x) -> $Q(theme: x)",
-          "rule"),
-
-    # --- Prepositional copular fact: "Alice is taller than Bob" / "Paris is north of Lyon" / "The ball is in the box" ---
-    _rule("prepositional_copular_fact",
-          "$x:e COP $V:{theme:e,reference:e} $y:e",
-          "$V(theme: $x, reference: $y)",
-          "fact"),
-
-    # --- Copular identity: "Clark Kent is Superman" ---
-    _rule("copular_identity",
-          "$x:e COP $y:e",
-          "identity(theme: $x, reference: $y)",
-          "fact"),
-
-    # --- Transitive fact: "Jack trusts Jill" ---
-    _rule("transitive_fact",
-          "$x:e $V:{agent:e,patient:e} $y:e",
-          "$V(agent: $x, patient: $y)",
-          "fact"),
-
-    # --- Intransitive predicate fact: "Superman flies" ---
-    _rule("intransitive_fact",
-          "$x:e $P:{theme:e}",
-          "$P(theme: $x)",
-          "fact"),
-
-    # --- Reciprocal conditional: "If two P V each other, they are R" ---
-    _rule("reciprocal_conditional",
-          "IF _ $P:{theme:e} $V:{agent:e,patient:e} LIT:each LIT:other _ COP $R:{agent:e,patient:e}",
-          "always [x:e, y:e]: $P(theme: x) & $P(theme: y) & $V(agent: x, patient: y) & $V(agent: y, patient: x) -> $R(agent: x, patient: y)",
-          "rule"),
-
-    # --- Conditional prepositional copular: "If a man is king of a country, he is successful" ---
-    _rule("conditional_prep_copular",
-          "IF A $P:{theme:e} COP $V:{theme:e,reference:e} A $Q:{theme:e} _ COP $R:{theme:e}",
-          "always [x:e, c:e]: $P(theme: x) & $V(theme: x, reference: c) & $Q(theme: c) -> $R(theme: x)",
-          "rule"),
-
-    # --- Conditional transitive: "If a girl loves a man, she is ambitious" ---
-    _rule("conditional_transitive",
-          "IF A $P:{theme:e} $V:{agent:e,patient:e} A $Q:{theme:e} _ COP $R:{theme:e}",
-          "always [x:e, y:e]: $P(theme: x) & $V(agent: x, patient: y) & $Q(theme: y) -> $R(theme: x)",
-          "rule"),
-
-    # --- Conditional symmetry: "If X is R to Y, then Y is R to X" ---
-    _rule("conditional_symmetry",
-          "IF $x:e COP $V:{agent:e,patient:e} $y:e THEN $y2:e COP $V2:{agent:e,patient:e} $x2:e",
-          "always [x:e, y:e]: $V(agent: x, patient: y) -> $V(agent: y, patient: x)",
-          "rule"),
-
-    # --- Conditional transitivity (explicit): "If X is in Y and Y is in Z, then X is in Z" ---
-    _rule("conditional_transitivity",
-          "IF $a:e COP $V:{theme:e,reference:e} $b:e AND $c:e COP $V2:{theme:e,reference:e} $d:e THEN $e:e COP $V3:{theme:e,reference:e} $f:e",
-          "always [x:e, y:e, z:e]: $V(theme: x, reference: y) & $V(theme: y, reference: z) -> $V(theme: x, reference: z)",
-          "rule"),
-
-    # --- Zero-arg fact: "It is raining" ---
-    _rule("zero_arg_fact",
-          "$P:{}",
-          "$P()",
-          "fact"),
-]
-
-
 def match_sentence(tokens: list[str], lexicon) -> list[dict]:
     """Try all grammar rules against a token sequence. Returns list of matches."""
+    from message.core.rules import GRAMMAR
+
     matches = []
     for rule in GRAMMAR:
         bindings = _try_match(rule.pattern, tokens, lexicon)
@@ -227,7 +119,6 @@ def _try_match(pattern: list[PatternSlot], tokens: list[str], lexicon) -> dict |
 
 def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
     """Recursive pattern matcher with backtracking."""
-    # Skip trailing ignored tokens — but NOT if next pattern slot is _ or lit
     skip_ignored = True
     if pi < len(pattern) and pattern[pi].kind in ("ignore", "lit"):
         skip_ignored = False
@@ -236,17 +127,14 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         while ti < len(tokens) and _clean(tokens[ti]) in IGNORED:
             ti += 1
 
-    # Both exhausted — success
     if pi >= len(pattern) and ti >= len(tokens):
         return dict(bindings)
 
-    # Pattern exhausted but tokens remain
     if pi >= len(pattern):
         while ti < len(tokens) and _clean(tokens[ti]) in IGNORED:
             ti += 1
         return dict(bindings) if ti >= len(tokens) else None
 
-    # Tokens exhausted but pattern remains
     if ti >= len(tokens):
         return None
 
@@ -254,14 +142,11 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
     token = _clean(tokens[ti])
 
     if slot.kind == "ignore":
-        # Match any single token
         return _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
 
     elif slot.kind == "lit":
-        # Match exact literal word
         if token == slot.literal:
             return _match_recursive(pattern, pi + 1, tokens, ti + 1, bindings, lexicon)
-        # Try skipping ignored token
         if token in IGNORED:
             return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
         return None
@@ -275,24 +160,19 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
         return None
 
     elif slot.kind == "var":
-        # Try to match token(s) against lexicon using multi-word lookup
         lookup = lexicon.lookup_at(tokens, ti)
         if lookup:
             canonical, category, consumed = lookup
 
-            # Check type constraint
             if slot.type_constraint:
                 actual_type = lexicon.get_type(canonical)
                 if actual_type == slot.type_constraint:
-                    # Bind variable
                     bindings[slot.name] = (canonical, actual_type)
                     result = _match_recursive(pattern, pi + 1, tokens, ti + consumed, bindings, lexicon)
                     if result is not None:
                         return result
-                    # Backtrack
                     del bindings[slot.name]
             else:
-                # No type constraint — accept any lexicon match
                 actual_type = lexicon.get_type(canonical)
                 bindings[slot.name] = (canonical, actual_type)
                 result = _match_recursive(pattern, pi + 1, tokens, ti + consumed, bindings, lexicon)
@@ -300,7 +180,6 @@ def _match_recursive(pattern, pi, tokens, ti, bindings, lexicon) -> dict | None:
                     return result
                 del bindings[slot.name]
 
-        # No lexicon match or type mismatch — try skipping as ignored
         if token in IGNORED:
             return _match_recursive(pattern, pi, tokens, ti + 1, bindings, lexicon)
 
