@@ -1,4 +1,0 @@
-king_of(theme: henry, reference: france)
-army_of(theme: army1, reference: henry)
-large(theme: army1)
-always [x:e, a:e, c:e]: king_of(theme: x, reference: c) & army_of(theme: a, reference: x) & large(theme: a) -> powerful(theme: x)

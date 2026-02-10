@@ -1,8 +1,0 @@
-predicate raining {}
-  "precipitation falling from clouds"
-
-predicate bring_umbrella {}
-  "to carry an umbrella"
-
-predicate should {content: s}
-  "ought to do something"

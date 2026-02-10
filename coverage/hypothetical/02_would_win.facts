@@ -1,2 +1,0 @@
-practice_daily(theme: team1)
-always [x:e]: practice_daily(theme: x) -> win_championship(theme: x)

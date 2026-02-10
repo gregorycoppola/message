@@ -1,1 +1,0 @@
-Possessive noun phrase. "Mary's dog" requires linking entity (dog) to owner (Mary). Tests owned_by relation and inference through possessed entity's properties.
