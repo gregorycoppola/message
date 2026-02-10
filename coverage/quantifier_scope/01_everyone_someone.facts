@@ -1,2 +1,0 @@
-person(theme: john)
-always [x:e]: person(theme: x) -> likes_someone(theme: x)
