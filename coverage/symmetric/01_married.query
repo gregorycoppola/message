@@ -1,1 +1,1 @@
-? married(agent: mary, patient: john)
+? married(theme: mary, reference: john)

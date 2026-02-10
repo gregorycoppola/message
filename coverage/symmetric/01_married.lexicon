@@ -1,4 +1,4 @@
-predicate married {agent: e, patient: e}
+predicate married {theme: e, reference: e}
   forms: married
   "in a marriage with"
 entity john : e
