@@ -106,7 +106,7 @@ def _rule(name: str, pattern_str: str, template: str, output_type: str = "fact")
 GRAMMAR: list[GrammarRule] = [
     # --- Copular facts: "Bob is a poodle" ---
     _rule("copular_fact",
-          "$x:e COP _ $P:{theme:e}",
+          "$x:e COP A $P:{theme:e}",
           "$P(theme: $x)",
           "fact"),
 
