@@ -1,0 +1,1 @@
+Multiple rules with generic subject + transitive + coreference. "people like them" = liked(theme: x).
