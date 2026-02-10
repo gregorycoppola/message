@@ -1,8 +1,0 @@
-predicate practice_daily {theme: e}
-  "to practice every day"
-
-predicate win_championship {theme: e}
-  "to win a championship"
-
-entity team1 : e
-  "a sports team"

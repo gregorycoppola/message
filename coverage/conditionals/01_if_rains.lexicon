@@ -1,8 +1,0 @@
-predicate raining {}
-  "precipitation falling from clouds"
-
-predicate wet {theme: e}
-  "covered or saturated with water"
-
-entity ground : e
-  "the surface of the earth"

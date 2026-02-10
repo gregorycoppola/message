@@ -1,1 +1,0 @@
-Set membership via conjunction. Two distinct instances of speaks() combined through AND gate. Tests that two different objects (French, Spanish) matching same predicate can be distinguished in rule premises.

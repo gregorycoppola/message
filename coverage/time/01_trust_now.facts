@@ -1,2 +1,0 @@
-trust(agent: jack, patient: jill, time: past)
-always [x:e, y:e]: trust(agent: x, patient: y, time: past) -> trust(agent: x, patient: y, time: present)

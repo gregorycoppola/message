@@ -1,2 +1,0 @@
-live_next_to(agent: smiths, patient: joneses)
-always [x:e, y:e]: live_next_to(agent: x, patient: y) -> live_next_to(agent: y, patient: x)

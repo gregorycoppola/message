@@ -1,7 +1,0 @@
-on_team(theme: alice, reference: team1)
-on_team(theme: bob, reference: team1)
-on_team(theme: carol, reference: team1)
-not_equal(theme: alice, reference: bob)
-not_equal(theme: bob, reference: carol)
-not_equal(theme: alice, reference: carol)
-always [x:e, y:e, z:e, t:e]: on_team(theme: x, reference: t) & on_team(theme: y, reference: t) & on_team(theme: z, reference: t) & not_equal(theme: x, reference: y) & not_equal(theme: y, reference: z) & not_equal(theme: x, reference: z) -> full(theme: t)

@@ -1,6 +1,0 @@
-language(theme: french)
-language(theme: spanish)
-speak(agent: mary, patient: french)
-speak(agent: mary, patient: spanish)
-not_equal(theme: french, reference: spanish)
-always [x:e, l1:e, l2:e]: speak(agent: x, patient: l1) & speak(agent: x, patient: l2) & language(theme: l1) & language(theme: l2) & not_equal(theme: l1, reference: l2) -> bilingual(theme: x)
