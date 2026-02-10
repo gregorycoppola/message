@@ -28,6 +28,9 @@ def main():
     cov_status = cov_sub.add_parser("status", help="Show coverage status")
     cov_status.set_defaults(func=cmd_coverage_status)
 
+    cov_parse = cov_sub.add_parser("parse", help="Run parser on all coverage tests")
+    cov_parse.set_defaults(func=cmd_coverage_parse)
+
     # parse
     parse_p = subparsers.add_parser("parse", help="Parse a document against a lexicon")
     parse_p.add_argument("document", help="Path to .document file")
@@ -104,6 +107,20 @@ def cmd_coverage_status(args):
     statuses = coverage_status(tests)
 
     print_status_summary(statuses)
+
+
+def cmd_coverage_parse(args):
+    """Run parser on all coverage tests and show results."""
+    from message.core.coverage import scan_tests, run_parse_coverage, print_parse_coverage
+
+    coverage_dir = _repo_root() / "coverage"
+    if not coverage_dir.is_dir():
+        print("✗ No coverage directory found.")
+        sys.exit(1)
+
+    tests = scan_tests(str(coverage_dir))
+    results = run_parse_coverage(tests)
+    print_parse_coverage(results)
 
 
 def cmd_parse(args):
