@@ -104,4 +104,10 @@ GRAMMAR = [
           "$P:{}",
           "$P()",
           "fact"),
+
+    # --- Conditional symmetry (theme/reference): "If John is married to Mary, then Mary is married to John" ---
+_rule("conditional_symmetry_prep",
+      "IF $x:e COP $V:{theme:e,reference:e} $y:e THEN $y2:e COP $V2:{theme:e,reference:e} $x2:e",
+      "always [x:e, y:e]: $V(theme: x, reference: y) -> $V(theme: y, reference: x)",
+      "rule"),
 ]
