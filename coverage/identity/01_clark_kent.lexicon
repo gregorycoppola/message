@@ -1,8 +1,8 @@
 predicate identity {theme: e, reference: e}
   forms: identity
   "is the same person as"
-predicate can_fly {theme: e}
-  forms: fly
+predicate flies {theme: e}
+  forms: flies, fly
   "able to fly"
 entity clark : e
   forms: Clark Kent, clark
