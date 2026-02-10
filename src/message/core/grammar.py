@@ -15,6 +15,7 @@ Pattern elements:
   - "IF"                — match conditional marker
   - "THEN"              — match consequent marker
   - "AND"               — match conjunction
+  - "NOT"               — match negation
   - "LIT:word"          — match a literal word exactly
   - "_"                 — match and ignore any single token
 """
@@ -30,7 +31,7 @@ KEYWORDS = {
     "IF": {"if", "when", "whenever"},
     "THEN": {"then"},
     "AND": {"and", "&"},
-    "NOT": {"not", "never", "no"},
+    "NOT": {"not", "never", "no", "n't"},
     "A": {"a", "an"},
     "SOMEONE": {"someone", "somebody", "anyone"},
 }
@@ -136,7 +137,7 @@ GRAMMAR: list[GrammarRule] = [
 
     # --- Copular generic: "A sparrow is a bird" ---
     _rule("copular_generic",
-          "A $P:{theme:e} COP _ $Q:{theme:e}",
+          "A $P:{theme:e} COP A $Q:{theme:e}",
           "always [x:e]: $P(theme: x) -> $Q(theme: x)",
           "rule"),
 
@@ -158,7 +159,7 @@ GRAMMAR: list[GrammarRule] = [
           "$V(agent: $x, patient: $y)",
           "fact"),
 
-    # --- Intransitive predicate fact: "Superman can fly" ---
+    # --- Intransitive predicate fact: "Superman flies" ---
     _rule("intransitive_fact",
           "$x:e $P:{theme:e}",
           "$P(theme: $x)",
@@ -168,6 +169,18 @@ GRAMMAR: list[GrammarRule] = [
     _rule("reciprocal_conditional",
           "IF _ $P:{theme:e} $V:{agent:e,patient:e} LIT:each LIT:other _ COP $R:{agent:e,patient:e}",
           "always [x:e, y:e]: $P(theme: x) & $P(theme: y) & $V(agent: x, patient: y) & $V(agent: y, patient: x) -> $R(agent: x, patient: y)",
+          "rule"),
+
+    # --- Conditional prepositional copular: "If a man is king of a country, he is successful" ---
+    _rule("conditional_prep_copular",
+          "IF A $P:{theme:e} COP $V:{theme:e,reference:e} A $Q:{theme:e} _ COP $R:{theme:e}",
+          "always [x:e, c:e]: $P(theme: x) & $V(theme: x, reference: c) & $Q(theme: c) -> $R(theme: x)",
+          "rule"),
+
+    # --- Conditional transitive: "If a girl loves a man, she is ambitious" ---
+    _rule("conditional_transitive",
+          "IF A $P:{theme:e} $V:{agent:e,patient:e} A $Q:{theme:e} _ COP $R:{theme:e}",
+          "always [x:e, y:e]: $P(theme: x) & $V(agent: x, patient: y) & $Q(theme: y) -> $R(theme: x)",
           "rule"),
 
     # --- Conditional symmetry: "If X is R to Y, then Y is R to X" ---
