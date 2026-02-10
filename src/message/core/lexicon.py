@@ -54,21 +54,52 @@ class Lexicon:
     # Index: surface form (lowercased) -> (canonical_name, "predicate"|"entity")
     _form_index: dict[str, tuple[str, str]] = field(default_factory=dict)
 
+    # Max number of words in any multi-word form
+    _max_form_length: int = 1
+
     def build_index(self):
         """Build the surface form -> canonical name index."""
         self._form_index = {}
+        self._max_form_length = 1
         for name, pred in self.predicates.items():
             forms = pred.forms if pred.forms else [name]
             for form in forms:
-                self._form_index[form.lower()] = (name, "predicate")
+                key = form.lower().strip()
+                self._form_index[key] = (name, "predicate")
+                word_count = len(key.split())
+                if word_count > self._max_form_length:
+                    self._max_form_length = word_count
         for name, ent in self.entities.items():
             forms = ent.forms if ent.forms else [name]
             for form in forms:
-                self._form_index[form.lower()] = (name, "entity")
+                key = form.lower().strip()
+                self._form_index[key] = (name, "entity")
+                word_count = len(key.split())
+                if word_count > self._max_form_length:
+                    self._max_form_length = word_count
 
     def lookup(self, surface: str) -> tuple[str, str] | None:
-        """Look up a surface form. Returns (canonical_name, category) or None."""
+        """Look up a single-word surface form. Returns (canonical_name, category) or None."""
         return self._form_index.get(surface.lower())
+
+    def lookup_at(self, tokens: list[str], position: int) -> tuple[str, str, int] | None:
+        """Try to match tokens starting at position, longest match first.
+        
+        Returns (canonical_name, category, num_tokens_consumed) or None.
+        """
+        max_len = min(self._max_form_length, len(tokens) - position)
+        for length in range(max_len, 0, -1):
+            # Build phrase from cleaned tokens
+            phrase_parts = []
+            for i in range(length):
+                cleaned = tokens[position + i].lower().rstrip(".,!?;:")
+                phrase_parts.append(cleaned)
+            phrase = " ".join(phrase_parts)
+            result = self._form_index.get(phrase)
+            if result:
+                canonical, category = result
+                return (canonical, category, length)
+        return None
 
     def get_type(self, canonical: str) -> str | None:
         """Get the type string for a canonical name."""
