@@ -1,0 +1,1 @@
+Two-hop relation through AND gate. parent(a,b) & parent(b,c) -> grandparent(a,c). Tests variable binding across a relational chain.

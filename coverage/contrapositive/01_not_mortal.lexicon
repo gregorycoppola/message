@@ -1,9 +1,8 @@
 predicate man {theme: e}
-  forms: man, men
-  "a human adult male"
+  "an adult male human"
+
 predicate mortal {theme: e}
-  forms: mortal
   "subject to death"
+
 entity zeus : e
-  forms: Zeus, zeus
-  "Greek god of thunder"
+  "the Greek god Zeus"

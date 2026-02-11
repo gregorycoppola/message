@@ -1,0 +1,26 @@
+predicate throw {agent: e, patient: e, target: e}
+  "to propel through the air"
+
+predicate window {theme: e}
+  "a glass opening in a wall"
+
+predicate broken {theme: e}
+  "damaged and no longer intact"
+
+predicate owner_of {theme: e, reference: e}
+  "to possess something"
+
+predicate upset {theme: e}
+  "emotionally distressed"
+
+entity john : e
+  "a person named John"
+
+entity rock1 : e
+  "a rock"
+
+entity window1 : e
+  "a window"
+
+entity owner1 : e
+  "the owner of the window"

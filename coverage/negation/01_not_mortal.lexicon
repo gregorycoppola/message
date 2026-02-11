@@ -1,9 +1,8 @@
 predicate god {theme: e}
-  forms: god, gods
-  "a deity"
+  "a divine being"
+
 predicate mortal {theme: e}
-  forms: mortal
   "subject to death"
+
 entity zeus : e
-  forms: Zeus, zeus
-  "Greek god of thunder"
+  "the Greek god Zeus"

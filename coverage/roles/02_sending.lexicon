@@ -1,0 +1,17 @@
+predicate send {agent: e, patient: e, recipient: e, source: e}
+  "to dispatch to a destination"
+
+predicate receive {agent: e, patient: e}
+  "to be given something"
+
+entity alice : e
+  "a person named Alice"
+
+entity bob : e
+  "a person named Bob"
+
+entity letter1 : e
+  "a letter"
+
+entity london : e
+  "the city of London"

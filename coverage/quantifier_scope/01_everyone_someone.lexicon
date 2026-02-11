@@ -1,0 +1,8 @@
+predicate person {theme: e}
+  "a human being"
+
+predicate likes_someone {theme: e}
+  "to like at least one person"
+
+entity john : e
+  "a person named John"

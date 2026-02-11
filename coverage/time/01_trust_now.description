@@ -1,0 +1,1 @@
+Temporal reasoning with probabilistic quantifier. Past fact inferred to present via "usually" (weight 0.85). Tests time as a role and non-deterministic inference. Expected result is "likely" not "yes".

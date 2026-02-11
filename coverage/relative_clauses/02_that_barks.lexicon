@@ -1,0 +1,26 @@
+predicate dog {theme: e}
+  "a domesticated canine"
+
+predicate bite {agent: e, patient: e}
+  "to use teeth to cut into"
+
+predicate person {theme: e}
+  "a human being"
+
+predicate belong_to {theme: e, reference: e}
+  "to be owned by"
+
+predicate should {content: s}
+  "ought to do something"
+
+predicate apologize {agent: e}
+  "to express regret"
+
+entity dog1 : e
+  "a dog"
+
+entity mailman1 : e
+  "a mailman"
+
+entity john : e
+  "a person named John"

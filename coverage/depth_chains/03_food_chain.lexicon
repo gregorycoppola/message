@@ -1,9 +1,14 @@
-predicate sparrow {theme: e}
-  forms: sparrow, sparrows
-  "a small bird"
 predicate bird {theme: e}
-  forms: bird, birds
-  "a feathered animal"
+  "a feathered flying animal"
+
+predicate animal {theme: e}
+  "a living organism that is not a plant"
+
+predicate organism {theme: e}
+  "a living thing"
+
 predicate mortal {theme: e}
-  forms: mortal
   "subject to death"
+
+entity sparrow1 : e
+  "a sparrow"

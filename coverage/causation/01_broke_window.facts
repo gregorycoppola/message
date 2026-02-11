@@ -1,0 +1,5 @@
+window(theme: window1)
+owner_of(theme: owner1, reference: window1)
+throw(agent: john, patient: rock1, target: window1)
+always [x:e, y:e, w:e]: throw(agent: x, patient: y, target: w) & window(theme: w) -> broken(theme: w)
+always [w:e, o:e]: broken(theme: w) & owner_of(theme: o, reference: w) -> upset(theme: o)

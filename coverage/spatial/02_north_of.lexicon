@@ -1,0 +1,11 @@
+predicate north_of {theme: e, reference: e}
+  "to be located north of"
+
+entity paris : e
+  "the city of Paris"
+
+entity lyon : e
+  "the city of Lyon"
+
+entity marseille : e
+  "the city of Marseille"

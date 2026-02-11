@@ -1,0 +1,17 @@
+predicate miss_bus {theme: e}
+  "to fail to catch a bus"
+
+predicate late {theme: e}
+  "arriving after the expected time"
+
+predicate boss_of {theme: e, reference: e}
+  "to be the supervisor of"
+
+predicate angry {theme: e}
+  "feeling strong displeasure"
+
+entity tom : e
+  "a person named Tom"
+
+entity boss1 : e
+  "Tom's boss"

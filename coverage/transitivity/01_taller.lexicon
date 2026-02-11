@@ -1,12 +1,11 @@
 predicate taller_than {theme: e, reference: e}
-  forms: taller
-  "having greater height than"
+  "to be of greater height than"
+
 entity alice : e
-  forms: Alice, alice
   "a person named Alice"
+
 entity bob : e
-  forms: Bob, bob
   "a person named Bob"
+
 entity carol : e
-  forms: Carol, carol
   "a person named Carol"
