@@ -28,8 +28,12 @@ def main():
     cov_status = cov_sub.add_parser("status", help="Show coverage status")
     cov_status.set_defaults(func=cmd_coverage_status)
 
-    cov_parse = cov_sub.add_parser("parse", help="Run parser on all coverage tests")
+    cov_parse = cov_sub.add_parser("parse", help="Run parser on syntax coverage tests")
     cov_parse.set_defaults(func=cmd_coverage_parse)
+
+    cov_verify = cov_sub.add_parser("verify", help="Run inference on all coverage tests")
+    cov_verify.add_argument("--verbose", "-v", action="store_true", help="Show detailed output")
+    cov_verify.set_defaults(func=cmd_coverage_verify)
 
     # parse
     parse_p = subparsers.add_parser("parse", help="Parse a document against a lexicon")
@@ -110,7 +114,7 @@ def cmd_coverage_status(args):
 
 
 def cmd_coverage_parse(args):
-    """Run parser on all coverage tests and show results."""
+    """Run parser on all syntax coverage tests and show results."""
     from message.core.coverage import scan_tests, run_parse_coverage, print_parse_coverage
 
     coverage_dir = _repo_root() / "coverage" / "syntax"
@@ -123,6 +127,18 @@ def cmd_coverage_parse(args):
     print_parse_coverage(results)
 
 
+def cmd_coverage_verify(args):
+    """Run inference on all inference coverage tests."""
+    from message.core.inference import verify_all
+
+    coverage_dir = _repo_root() / "coverage" / "inference"
+    if not coverage_dir.is_dir():
+        print("✗ No coverage/inference directory found.")
+        sys.exit(1)
+
+    verify_all(str(coverage_dir), verbose=getattr(args, 'verbose', False))
+
+
 def cmd_parse(args):
     """Parse a document against a lexicon and show results."""
     from message.core.parser import parse_document_files
@@ -130,7 +146,6 @@ def cmd_parse(args):
     doc_path = args.document
     lex_path = args.lexicon
 
-    # Auto-resolve: if given a base name, find the files
     if not doc_path.endswith(".document"):
         doc_path = doc_path + ".document"
     if not lex_path.endswith(".lexicon"):
@@ -138,7 +153,6 @@ def cmd_parse(args):
 
     result = parse_document_files(doc_path, lex_path)
 
-    # Load gold facts if provided
     gold_facts = None
     if args.facts:
         facts_path = args.facts
@@ -147,7 +161,6 @@ def cmd_parse(args):
         with open(facts_path) as f:
             gold_facts = [line.strip() for line in f if line.strip() and not line.startswith("#")]
 
-    # Display results
     print(f"Lexicon: {len(result.lexicon.predicates)} predicates, {len(result.lexicon.entities)} entities")
     print(f"Sentences: {len(result.sentences)}")
     print()
@@ -158,7 +171,6 @@ def cmd_parse(args):
         print(f"  {status} [{i+1}] \"{sp.sentence}\"  — {count}")
 
         if sp.failed:
-            # Show which tokens couldn't be resolved
             for tok in sp.tokens:
                 clean = tok.lower().rstrip(".,!?")
                 lookup = result.lexicon.lookup(clean)
@@ -191,13 +203,11 @@ def cmd_parse(args):
 
         print()
 
-    # Summary
     derived = result.all_facts
     print(f"Derived {len(derived)} logical forms:")
     for f in derived:
         print(f"  {f}")
 
-    # Verify against gold facts
     if gold_facts:
         print()
         print(f"Gold facts ({len(gold_facts)}):")
