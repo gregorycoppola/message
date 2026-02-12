@@ -1,0 +1,12 @@
+predicate identity {theme: e, reference: e}
+  forms: identity
+  "is the same person as"
+predicate flies {theme: e}
+  forms: flies, fly
+  "able to fly"
+entity clark : e
+  forms: Clark Kent, clark
+  "Clark Kent, reporter"
+entity superman : e
+  forms: Superman, superman
+  "Superman, superhero"

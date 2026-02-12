@@ -1,0 +1,2 @@
+always [x:e]: sparrow(theme: x) -> bird(theme: x)
+always [x:e]: bird(theme: x) -> mortal(theme: x)

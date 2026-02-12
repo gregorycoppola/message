@@ -1,0 +1,9 @@
+predicate sparrow {theme: e}
+  forms: sparrow, sparrows
+  "a small bird"
+predicate bird {theme: e}
+  forms: bird, birds
+  "a feathered animal"
+predicate mortal {theme: e}
+  forms: mortal
+  "subject to death"

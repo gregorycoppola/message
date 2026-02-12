@@ -1,0 +1,15 @@
+predicate person {theme: e}
+  forms: person, people
+  "a human being"
+predicate trust {agent: e, patient: e}
+  forms: trust, trusts, trusted, trusting
+  "to have confidence in someone"
+predicate allied {agent: e, patient: e}
+  forms: allied, allies
+  "to be in alliance with"
+entity jack : e
+  forms: Jack, jack
+  "a person named Jack"
+entity jill : e
+  forms: Jill, jill
+  "a person named Jill"

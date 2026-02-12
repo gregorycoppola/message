@@ -1,0 +1,3 @@
+taller_than(theme: alice, reference: bob)
+taller_than(theme: bob, reference: carol)
+always [x:e, y:e, z:e]: taller_than(theme: x, reference: y) & taller_than(theme: y, reference: z) -> taller_than(theme: x, reference: z)
