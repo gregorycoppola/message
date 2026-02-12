@@ -77,9 +77,9 @@ def cmd_coverage_list(args):
     """List all coverage tests."""
     from message.core.coverage import scan_tests
 
-    coverage_dir = _repo_root() / "coverage"
+    coverage_dir = _repo_root() / "coverage" / "syntax"
     if not coverage_dir.is_dir():
-        print("✗ No coverage directory found.")
+        print("✗ No coverage/syntax directory found.")
         sys.exit(1)
 
     tests = scan_tests(str(coverage_dir))
@@ -98,9 +98,9 @@ def cmd_coverage_status(args):
     """Show which tests are in new vs legacy format."""
     from message.core.coverage import scan_tests, coverage_status, print_status_summary
 
-    coverage_dir = _repo_root() / "coverage"
+    coverage_dir = _repo_root() / "coverage" / "syntax"
     if not coverage_dir.is_dir():
-        print("✗ No coverage directory found.")
+        print("✗ No coverage/syntax directory found.")
         sys.exit(1)
 
     tests = scan_tests(str(coverage_dir))
@@ -113,9 +113,9 @@ def cmd_coverage_parse(args):
     """Run parser on all coverage tests and show results."""
     from message.core.coverage import scan_tests, run_parse_coverage, print_parse_coverage
 
-    coverage_dir = _repo_root() / "coverage"
+    coverage_dir = _repo_root() / "coverage" / "syntax"
     if not coverage_dir.is_dir():
-        print("✗ No coverage directory found.")
+        print("✗ No coverage/syntax directory found.")
         sys.exit(1)
 
     tests = scan_tests(str(coverage_dir))
