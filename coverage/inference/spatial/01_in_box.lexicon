@@ -1,12 +1,11 @@
 predicate in {theme: e, reference: e}
-  forms: in
-  "located inside of"
+  "to be located inside"
+
 entity ball : e
-  forms: ball
   "a ball"
+
 entity box : e
-  forms: box
   "a box"
+
 entity closet : e
-  forms: closet
   "a closet"

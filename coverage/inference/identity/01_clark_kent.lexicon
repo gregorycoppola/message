@@ -1,12 +1,11 @@
 predicate identity {theme: e, reference: e}
-  forms: identity
-  "is the same person as"
-predicate flies {theme: e}
-  forms: flies, fly
-  "able to fly"
+  "to be the same person as"
+
+predicate can_fly {theme: e}
+  "able to fly through the air"
+
 entity clark : e
-  forms: Clark Kent, clark
-  "Clark Kent, reporter"
+  "Clark Kent"
+
 entity superman : e
-  forms: Superman, superman
-  "Superman, superhero"
+  "Superman"
