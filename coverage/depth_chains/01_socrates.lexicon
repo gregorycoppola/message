@@ -1,8 +1,0 @@
-predicate man {theme: e}
-  "a human adult male"
-
-predicate mortal {theme: e}
-  "subject to death; will eventually die"
-
-entity socrates : e
-  "Greek philosopher, c. 470-399 BC"

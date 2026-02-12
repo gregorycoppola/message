@@ -1,1 +1,0 @@
-Symmetric relation. married(a,b) -> married(b,a). Tests that inference can derive the reverse of a stated relation.

@@ -1,1 +1,0 @@
-Transitive relation. taller(a,b) and taller(b,c) implies taller(a,c). Tests binary relation chaining distinct from type hierarchies.

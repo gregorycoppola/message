@@ -1,2 +1,0 @@
-married(agent: john, patient: mary)
-always [x:e, y:e]: married(agent: x, patient: y) -> married(agent: y, patient: x)

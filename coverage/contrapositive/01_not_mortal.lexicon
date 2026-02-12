@@ -1,8 +1,0 @@
-predicate man {theme: e}
-  "an adult male human"
-
-predicate mortal {theme: e}
-  "subject to death"
-
-entity zeus : e
-  "the Greek god Zeus"

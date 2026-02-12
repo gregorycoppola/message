@@ -1,3 +1,0 @@
-north_of(theme: paris, reference: lyon)
-north_of(theme: lyon, reference: marseille)
-always [x:e, y:e, z:e]: north_of(theme: x, reference: y) & north_of(theme: y, reference: z) -> north_of(theme: x, reference: z)

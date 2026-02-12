@@ -1,2 +1,0 @@
-not mortal(theme: zeus)
-always [x:e]: man(theme: x) -> mortal(theme: x)

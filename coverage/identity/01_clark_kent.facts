@@ -1,3 +1,0 @@
-identity(theme: clark, reference: superman)
-can_fly(theme: superman)
-always [x:e, y:e]: identity(theme: x, reference: y) & can_fly(theme: y) -> can_fly(theme: x)

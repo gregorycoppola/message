@@ -1,1 +1,0 @@
-AND gate plus depth. Rule 1 infers henry is successful. Rule 2 combines loves(mary,henry) with inferred type(henry,successful) through AND gate. Tests mixing evidence and inferred premises.

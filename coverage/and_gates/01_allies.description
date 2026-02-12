@@ -1,1 +1,0 @@
-Pure AND gate test. Two independent facts must both hold. Tests Psi_and factor with two premises and role swapping (x,y) and (y,x).

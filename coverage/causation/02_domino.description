@@ -1,1 +1,0 @@
-Long causal chain. Four-step domino effect. Tests forward propagation through event-triggered rules. Similar to depth chains but with causal rather than type semantics.

@@ -1,8 +1,0 @@
-predicate married {agent: e, patient: e}
-  "to be in a marriage with"
-
-entity john : e
-  "a person named John"
-
-entity mary : e
-  "a person named Mary"
