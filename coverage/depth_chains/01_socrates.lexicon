@@ -1,9 +1,8 @@
 predicate man {theme: e}
-  forms: man, men
   "a human adult male"
+
 predicate mortal {theme: e}
-  forms: mortal
   "subject to death; will eventually die"
+
 entity socrates : e
-  forms: Socrates, socrates
   "Greek philosopher, c. 470-399 BC"

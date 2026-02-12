@@ -1,2 +1,5 @@
+person(theme: jack)
+person(theme: jill)
 trust(agent: jack, patient: jill)
-always [x:e, y:e]: person(theme: x) & person(theme: y) & trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)
+rarely [x:e, y:e]: person(theme: x) & person(theme: y) -> allied(agent: x, patient: y)
+always [x:e, y:e]: trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)

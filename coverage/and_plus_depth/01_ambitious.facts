@@ -1,7 +1,7 @@
 man(theme: henry)
 girl(theme: mary)
-country(theme: france)
 king_of(theme: henry, reference: france)
+country(theme: france)
 love(agent: mary, patient: henry)
 always [x:e, c:e]: man(theme: x) & king_of(theme: x, reference: c) & country(theme: c) -> successful(theme: x)
 always [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & successful(theme: y) -> ambitious(theme: x)

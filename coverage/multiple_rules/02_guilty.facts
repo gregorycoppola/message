@@ -1,0 +1,5 @@
+at_scene(theme: suspect1, reference: scene1)
+has_motive(theme: suspect1)
+owns(agent: suspect1, patient: weapon1)
+likely [x:e, s:e]: at_scene(theme: x, reference: s) & has_motive(theme: x) -> guilty(theme: x)
+likely [x:e, w:e, s:e]: owns(agent: x, patient: w) & at_scene(theme: x, reference: s) -> guilty(theme: x)

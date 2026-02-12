@@ -1,0 +1,3 @@
+poodle(theme: fluffy)
+always [x:e]: poodle(theme: x) -> dog(theme: x)
+always [x:e]: dog(theme: x) -> animal(theme: x)

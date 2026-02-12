@@ -1,0 +1,1 @@
+Three-premise AND gate plus depth. Rule 1 has three premises (old, king_of, large country) -> powerful. Rule 2 has two premises (loves, powerful) -> ambitious. Tests larger AND gates and two-level inference chain.

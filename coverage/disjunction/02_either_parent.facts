@@ -1,0 +1,4 @@
+mother_of(agent: alice, patient: bob)
+father_of(agent: carol, patient: bob)
+always [x:e, y:e]: mother_of(agent: x, patient: y) -> parent_of(agent: x, patient: y)
+always [x:e, y:e]: father_of(agent: x, patient: y) -> parent_of(agent: x, patient: y)

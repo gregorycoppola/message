@@ -1,0 +1,3 @@
+lives_alone(theme: alice)
+always [x:e]: lives_alone(theme: x) -> lonely(theme: x)
+always [x:e]: lives_alone(theme: x) -> finds_exciting(theme: x)
