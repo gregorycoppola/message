@@ -1,0 +1,20 @@
+predicate speak {agent: e, patient: e}
+  "to use a language"
+
+predicate language {theme: e}
+  "a system of communication"
+
+predicate bilingual {theme: e}
+  "able to speak two languages"
+
+predicate not_equal {theme: e, reference: e}
+  "to be different from"
+
+entity mary : e
+  "a person named Mary"
+
+entity french : e
+  "the French language"
+
+entity spanish : e
+  "the Spanish language"

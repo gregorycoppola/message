@@ -1,0 +1,4 @@
+person(theme: john)
+not rich(theme: john)
+rarely [x:e]: person(theme: x) -> buy_house(theme: x)
+always [x:e]: rich(theme: x) -> buy_house(theme: x)

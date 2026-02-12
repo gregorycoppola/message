@@ -1,0 +1,1 @@
+AND gate negative test. Only one direction of trust present. Verifies AND gate correctly blocks when one premise is missing.

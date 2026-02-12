@@ -1,0 +1,4 @@
+have(agent: mary, patient: dog1)
+dog(theme: dog1)
+friendly(theme: dog1)
+always [x:e, d:e]: have(agent: x, patient: d) & dog(theme: d) & friendly(theme: d) -> approachable(theme: x)

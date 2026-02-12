@@ -1,0 +1,8 @@
+predicate live_next_to {agent: e, patient: e}
+  "to reside adjacent to"
+
+entity smiths : e
+  "the Smith family"
+
+entity joneses : e
+  "the Jones family"

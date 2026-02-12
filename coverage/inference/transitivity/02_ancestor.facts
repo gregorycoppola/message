@@ -1,0 +1,3 @@
+parent_of(agent: alice, patient: bob)
+parent_of(agent: bob, patient: carol)
+always [x:e, y:e, z:e]: parent_of(agent: x, patient: y) & parent_of(agent: y, patient: z) -> grandparent_of(agent: x, patient: z)

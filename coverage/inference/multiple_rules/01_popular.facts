@@ -1,0 +1,4 @@
+funny(theme: jack)
+kind(theme: jack)
+always [x:e]: funny(theme: x) -> liked(theme: x)
+always [x:e]: kind(theme: x) -> liked(theme: x)

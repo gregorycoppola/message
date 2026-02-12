@@ -1,0 +1,4 @@
+bird(theme: sparrow1)
+always [x:e]: bird(theme: x) -> animal(theme: x)
+always [x:e]: animal(theme: x) -> organism(theme: x)
+always [x:e]: organism(theme: x) -> mortal(theme: x)

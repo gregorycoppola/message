@@ -1,0 +1,14 @@
+predicate give {agent: e, patient: e, recipient: e}
+  "to transfer possession to"
+
+predicate have {agent: e, patient: e}
+  "to possess or own"
+
+entity john : e
+  "a person named John"
+
+entity mary : e
+  "a person named Mary"
+
+entity book1 : e
+  "a book"

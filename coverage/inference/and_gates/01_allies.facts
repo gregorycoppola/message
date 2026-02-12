@@ -1,0 +1,3 @@
+trust(agent: jack, patient: jill)
+trust(agent: jill, patient: jack)
+always [x:e, y:e]: trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)

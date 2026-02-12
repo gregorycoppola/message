@@ -1,0 +1,1 @@
+Four-link depth chain with indefinite noun phrase. Tests Skolem introduction for "a sparrow" and chain: bird -> animal -> organism -> mortal.
