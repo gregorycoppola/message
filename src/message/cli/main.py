@@ -35,6 +35,11 @@ def main():
     cov_verify.add_argument("--verbose", "-v", action="store_true", help="Show detailed output")
     cov_verify.set_defaults(func=cmd_coverage_verify)
 
+    cov_export = cov_sub.add_parser("export", help="Export coverage results as JSON")
+    cov_export.add_argument("suite", choices=["parse", "inference", "all"], help="Which suite to export")
+    cov_export.add_argument("--output", "-o", help="Output directory (default: ./export)")
+    cov_export.set_defaults(func=cmd_coverage_export)
+
     # parse
     parse_p = subparsers.add_parser("parse", help="Parse a document against a lexicon")
     parse_p.add_argument("document", help="Path to .document file")
@@ -137,6 +142,41 @@ def cmd_coverage_verify(args):
         sys.exit(1)
 
     verify_all(str(coverage_dir), verbose=getattr(args, 'verbose', False))
+
+
+def cmd_coverage_export(args):
+    """Export coverage results as JSON files."""
+    import json
+    from message.core.export import export_parse_results, export_inference_results
+
+    out_dir = Path(args.output) if args.output else _repo_root() / "export"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.suite in ("parse", "all"):
+        coverage_dir = _repo_root() / "coverage" / "syntax"
+        if coverage_dir.is_dir():
+            print("Exporting parse results...")
+            data = export_parse_results(str(coverage_dir))
+            out_file = out_dir / "parse.json"
+            with open(out_file, "w") as f:
+                json.dump(data, f, indent=2)
+            print(f"  ✓ {out_file} ({data['summary']['total_tests']} tests)")
+        else:
+            print("  ✗ No coverage/syntax directory found.")
+
+    if args.suite in ("inference", "all"):
+        coverage_dir = _repo_root() / "coverage" / "inference"
+        if coverage_dir.is_dir():
+            print("Exporting inference results...")
+            data = export_inference_results(str(coverage_dir))
+            out_file = out_dir / "inference.json"
+            with open(out_file, "w") as f:
+                json.dump(data, f, indent=2)
+            print(f"  ✓ {out_file} ({data['summary']['total_tests']} tests)")
+        else:
+            print("  ✗ No coverage/inference directory found.")
+
+    print("Done.")
 
 
 def cmd_parse(args):
