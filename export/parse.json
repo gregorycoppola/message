@@ -1,0 +1,2052 @@
+{
+  "type": "parse",
+  "summary": {
+    "total_tests": 12,
+    "passing": 12,
+    "total_sentences": 33,
+    "parsed_sentences": 33,
+    "total_gold_facts": 33,
+    "derived_gold_facts": 33
+  },
+  "tests": [
+    {
+      "group": "and_gates",
+      "name": "01_allies",
+      "label": "and_gates/01_allies",
+      "document": "Jack trusts Jill. Jill trusts Jack. If two people trust each other, they are allies.",
+      "lexicon_raw": "predicate person {theme: e}\n  forms: person, people\n  \"a human being\"\npredicate trust {agent: e, patient: e}\n  forms: trust, trusts, trusted, trusting\n  \"to have confidence in someone\"\npredicate allied {agent: e, patient: e}\n  forms: allied, allies\n  \"to be in alliance with\"\nentity jack : e\n  forms: Jack, jack\n  \"a person named Jack\"\nentity jill : e\n  forms: Jill, jill\n  \"a person named Jill\"",
+      "lexicon": {
+        "predicates": {
+          "person": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "person",
+              "people"
+            ],
+            "gloss": "a human being"
+          },
+          "trust": {
+            "roles": {
+              "agent": "e",
+              "patient": "e"
+            },
+            "forms": [
+              "trust",
+              "trusts",
+              "trusted",
+              "trusting"
+            ],
+            "gloss": "to have confidence in someone"
+          },
+          "allied": {
+            "roles": {
+              "agent": "e",
+              "patient": "e"
+            },
+            "forms": [
+              "allied",
+              "allies"
+            ],
+            "gloss": "to be in alliance with"
+          }
+        },
+        "entities": {
+          "jack": {
+            "type": "e",
+            "forms": [
+              "Jack",
+              "jack"
+            ],
+            "gloss": "a person named Jack"
+          },
+          "jill": {
+            "type": "e",
+            "forms": [
+              "Jill",
+              "jill"
+            ],
+            "gloss": "a person named Jill"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Jack trusts Jill.",
+          "tokens": [
+            "Jack",
+            "trusts",
+            "Jill."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "transitive_fact",
+              "output": "trust(agent: jack, patient: jill)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "jack",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "trust",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$y": {
+                  "canonical": "jill",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Jill trusts Jack.",
+          "tokens": [
+            "Jill",
+            "trusts",
+            "Jack."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "transitive_fact",
+              "output": "trust(agent: jill, patient: jack)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "jill",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "trust",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$y": {
+                  "canonical": "jack",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "If two people trust each other, they are allies.",
+          "tokens": [
+            "If",
+            "two",
+            "people",
+            "trust",
+            "each",
+            "other,",
+            "they",
+            "are",
+            "allies."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "reciprocal_conditional",
+              "output": "always [x:e, y:e]: person(theme: x) & person(theme: y) & trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "person",
+                  "type": "{theme:e}"
+                },
+                "$V": {
+                  "canonical": "trust",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$R": {
+                  "canonical": "allied",
+                  "type": "{agent:e,patient:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "trust(agent: jack, patient: jill)",
+          "derived": true
+        },
+        {
+          "fact": "trust(agent: jill, patient: jack)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e, y:e]: person(theme: x) & person(theme: y) & trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "trust(agent: jack, patient: jill)",
+        "trust(agent: jill, patient: jack)",
+        "always [x:e, y:e]: person(theme: x) & person(theme: y) & trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "3/3",
+        "sentences": "3/3",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "and_gates",
+      "name": "02_one_sided",
+      "label": "and_gates/02_one_sided",
+      "document": "Jack trusts Jill. If two people trust each other, they are allies.",
+      "lexicon_raw": "predicate person {theme: e}\n  forms: person, people\n  \"a human being\"\npredicate trust {agent: e, patient: e}\n  forms: trust, trusts, trusted, trusting\n  \"to have confidence in someone\"\npredicate allied {agent: e, patient: e}\n  forms: allied, allies\n  \"to be in alliance with\"\nentity jack : e\n  forms: Jack, jack\n  \"a person named Jack\"\nentity jill : e\n  forms: Jill, jill\n  \"a person named Jill\"",
+      "lexicon": {
+        "predicates": {
+          "person": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "person",
+              "people"
+            ],
+            "gloss": "a human being"
+          },
+          "trust": {
+            "roles": {
+              "agent": "e",
+              "patient": "e"
+            },
+            "forms": [
+              "trust",
+              "trusts",
+              "trusted",
+              "trusting"
+            ],
+            "gloss": "to have confidence in someone"
+          },
+          "allied": {
+            "roles": {
+              "agent": "e",
+              "patient": "e"
+            },
+            "forms": [
+              "allied",
+              "allies"
+            ],
+            "gloss": "to be in alliance with"
+          }
+        },
+        "entities": {
+          "jack": {
+            "type": "e",
+            "forms": [
+              "Jack",
+              "jack"
+            ],
+            "gloss": "a person named Jack"
+          },
+          "jill": {
+            "type": "e",
+            "forms": [
+              "Jill",
+              "jill"
+            ],
+            "gloss": "a person named Jill"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Jack trusts Jill.",
+          "tokens": [
+            "Jack",
+            "trusts",
+            "Jill."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "transitive_fact",
+              "output": "trust(agent: jack, patient: jill)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "jack",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "trust",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$y": {
+                  "canonical": "jill",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "If two people trust each other, they are allies.",
+          "tokens": [
+            "If",
+            "two",
+            "people",
+            "trust",
+            "each",
+            "other,",
+            "they",
+            "are",
+            "allies."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "reciprocal_conditional",
+              "output": "always [x:e, y:e]: person(theme: x) & person(theme: y) & trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "person",
+                  "type": "{theme:e}"
+                },
+                "$V": {
+                  "canonical": "trust",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$R": {
+                  "canonical": "allied",
+                  "type": "{agent:e,patient:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "trust(agent: jack, patient: jill)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e, y:e]: person(theme: x) & person(theme: y) & trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "trust(agent: jack, patient: jill)",
+        "always [x:e, y:e]: person(theme: x) & person(theme: y) & trust(agent: x, patient: y) & trust(agent: y, patient: x) -> allied(agent: x, patient: y)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "and_gates",
+      "name": "03_dating",
+      "label": "and_gates/03_dating",
+      "document": "Jack likes Jill. Jill likes Jack. If two people like each other, they are dating.",
+      "lexicon_raw": "predicate person {theme: e}\n  forms: person, people\n  \"a human being\"\npredicate like {agent: e, patient: e}\n  forms: like, likes, liked, liking\n  \"to find pleasant or attractive\"\npredicate dating {agent: e, patient: e}\n  forms: dating\n  \"to be in a romantic relationship\"\nentity jack : e\n  forms: Jack, jack\n  \"a person named Jack\"\nentity jill : e\n  forms: Jill, jill\n  \"a person named Jill\"",
+      "lexicon": {
+        "predicates": {
+          "person": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "person",
+              "people"
+            ],
+            "gloss": "a human being"
+          },
+          "like": {
+            "roles": {
+              "agent": "e",
+              "patient": "e"
+            },
+            "forms": [
+              "like",
+              "likes",
+              "liked",
+              "liking"
+            ],
+            "gloss": "to find pleasant or attractive"
+          },
+          "dating": {
+            "roles": {
+              "agent": "e",
+              "patient": "e"
+            },
+            "forms": [
+              "dating"
+            ],
+            "gloss": "to be in a romantic relationship"
+          }
+        },
+        "entities": {
+          "jack": {
+            "type": "e",
+            "forms": [
+              "Jack",
+              "jack"
+            ],
+            "gloss": "a person named Jack"
+          },
+          "jill": {
+            "type": "e",
+            "forms": [
+              "Jill",
+              "jill"
+            ],
+            "gloss": "a person named Jill"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Jack likes Jill.",
+          "tokens": [
+            "Jack",
+            "likes",
+            "Jill."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "transitive_fact",
+              "output": "like(agent: jack, patient: jill)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "jack",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "like",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$y": {
+                  "canonical": "jill",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Jill likes Jack.",
+          "tokens": [
+            "Jill",
+            "likes",
+            "Jack."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "transitive_fact",
+              "output": "like(agent: jill, patient: jack)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "jill",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "like",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$y": {
+                  "canonical": "jack",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "If two people like each other, they are dating.",
+          "tokens": [
+            "If",
+            "two",
+            "people",
+            "like",
+            "each",
+            "other,",
+            "they",
+            "are",
+            "dating."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "reciprocal_conditional",
+              "output": "always [x:e, y:e]: person(theme: x) & person(theme: y) & like(agent: x, patient: y) & like(agent: y, patient: x) -> dating(agent: x, patient: y)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "person",
+                  "type": "{theme:e}"
+                },
+                "$V": {
+                  "canonical": "like",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$R": {
+                  "canonical": "dating",
+                  "type": "{agent:e,patient:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "like(agent: jack, patient: jill)",
+          "derived": true
+        },
+        {
+          "fact": "like(agent: jill, patient: jack)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e, y:e]: person(theme: x) & person(theme: y) & like(agent: x, patient: y) & like(agent: y, patient: x) -> dating(agent: x, patient: y)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "like(agent: jack, patient: jill)",
+        "like(agent: jill, patient: jack)",
+        "always [x:e, y:e]: person(theme: x) & person(theme: y) & like(agent: x, patient: y) & like(agent: y, patient: x) -> dating(agent: x, patient: y)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "3/3",
+        "sentences": "3/3",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "and_plus_depth",
+      "name": "01_ambitious",
+      "label": "and_plus_depth/01_ambitious",
+      "document": "Henry is a man. Mary is a girl. France is a country. Henry is king of France. Mary loves Henry. If a man is king of a country, he is successful. If a girl loves a successful man, she is ambitious.",
+      "lexicon_raw": "predicate man {theme: e}\n  forms: man, men\n  \"an adult male human\"\npredicate girl {theme: e}\n  forms: girl, girls\n  \"a young female human\"\npredicate king_of {theme: e, reference: e}\n  forms: king\n  \"to be the monarch of\"\npredicate country {theme: e}\n  forms: country, countries\n  \"a nation or state\"\npredicate love {agent: e, patient: e}\n  forms: love, loves, loved, loving\n  \"to have deep affection for\"\npredicate successful {theme: e}\n  forms: successful\n  \"having achieved wealth or status\"\npredicate ambitious {theme: e}\n  forms: ambitious\n  \"having a strong desire for success\"\nentity henry : e\n  forms: Henry, henry\n  \"a man named Henry\"\nentity mary : e\n  forms: Mary, mary\n  \"a woman named Mary\"\nentity france : e\n  forms: France, france\n  \"the country of France\"",
+      "lexicon": {
+        "predicates": {
+          "man": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "man",
+              "men"
+            ],
+            "gloss": "an adult male human"
+          },
+          "girl": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "girl",
+              "girls"
+            ],
+            "gloss": "a young female human"
+          },
+          "king_of": {
+            "roles": {
+              "theme": "e",
+              "reference": "e"
+            },
+            "forms": [
+              "king"
+            ],
+            "gloss": "to be the monarch of"
+          },
+          "country": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "country",
+              "countries"
+            ],
+            "gloss": "a nation or state"
+          },
+          "love": {
+            "roles": {
+              "agent": "e",
+              "patient": "e"
+            },
+            "forms": [
+              "love",
+              "loves",
+              "loved",
+              "loving"
+            ],
+            "gloss": "to have deep affection for"
+          },
+          "successful": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "successful"
+            ],
+            "gloss": "having achieved wealth or status"
+          },
+          "ambitious": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "ambitious"
+            ],
+            "gloss": "having a strong desire for success"
+          }
+        },
+        "entities": {
+          "henry": {
+            "type": "e",
+            "forms": [
+              "Henry",
+              "henry"
+            ],
+            "gloss": "a man named Henry"
+          },
+          "mary": {
+            "type": "e",
+            "forms": [
+              "Mary",
+              "mary"
+            ],
+            "gloss": "a woman named Mary"
+          },
+          "france": {
+            "type": "e",
+            "forms": [
+              "France",
+              "france"
+            ],
+            "gloss": "the country of France"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Henry is a man.",
+          "tokens": [
+            "Henry",
+            "is",
+            "a",
+            "man."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_fact",
+              "output": "man(theme: henry)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "henry",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "man",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Mary is a girl.",
+          "tokens": [
+            "Mary",
+            "is",
+            "a",
+            "girl."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_fact",
+              "output": "girl(theme: mary)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "mary",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "girl",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "France is a country.",
+          "tokens": [
+            "France",
+            "is",
+            "a",
+            "country."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_fact",
+              "output": "country(theme: france)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "france",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "country",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Henry is king of France.",
+          "tokens": [
+            "Henry",
+            "is",
+            "king",
+            "of",
+            "France."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "prepositional_copular_fact",
+              "output": "king_of(theme: henry, reference: france)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "henry",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "king_of",
+                  "type": "{theme:e,reference:e}"
+                },
+                "$y": {
+                  "canonical": "france",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Mary loves Henry.",
+          "tokens": [
+            "Mary",
+            "loves",
+            "Henry."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "transitive_fact",
+              "output": "love(agent: mary, patient: henry)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "mary",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "love",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$y": {
+                  "canonical": "henry",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "If a man is king of a country, he is successful.",
+          "tokens": [
+            "If",
+            "a",
+            "man",
+            "is",
+            "king",
+            "of",
+            "a",
+            "country,",
+            "he",
+            "is",
+            "successful."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "conditional_prep_copular",
+              "output": "always [x:e, c:e]: man(theme: x) & king_of(theme: x, reference: c) & country(theme: c) -> successful(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "man",
+                  "type": "{theme:e}"
+                },
+                "$V": {
+                  "canonical": "king_of",
+                  "type": "{theme:e,reference:e}"
+                },
+                "$Q": {
+                  "canonical": "country",
+                  "type": "{theme:e}"
+                },
+                "$R": {
+                  "canonical": "successful",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "If a girl loves a successful man, she is ambitious.",
+          "tokens": [
+            "If",
+            "a",
+            "girl",
+            "loves",
+            "a",
+            "successful",
+            "man,",
+            "she",
+            "is",
+            "ambitious."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "conditional_transitive",
+              "output": "always [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & successful(theme: y) -> ambitious(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "girl",
+                  "type": "{theme:e}"
+                },
+                "$V": {
+                  "canonical": "love",
+                  "type": "{agent:e,patient:e}"
+                },
+                "$Q": {
+                  "canonical": "successful",
+                  "type": "{theme:e}"
+                },
+                "$R": {
+                  "canonical": "ambitious",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "man(theme: henry)",
+          "derived": true
+        },
+        {
+          "fact": "girl(theme: mary)",
+          "derived": true
+        },
+        {
+          "fact": "country(theme: france)",
+          "derived": true
+        },
+        {
+          "fact": "king_of(theme: henry, reference: france)",
+          "derived": true
+        },
+        {
+          "fact": "love(agent: mary, patient: henry)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e, c:e]: man(theme: x) & king_of(theme: x, reference: c) & country(theme: c) -> successful(theme: x)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & successful(theme: y) -> ambitious(theme: x)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "man(theme: henry)",
+        "girl(theme: mary)",
+        "country(theme: france)",
+        "king_of(theme: henry, reference: france)",
+        "love(agent: mary, patient: henry)",
+        "always [x:e, c:e]: man(theme: x) & king_of(theme: x, reference: c) & country(theme: c) -> successful(theme: x)",
+        "always [x:e, y:e]: girl(theme: x) & love(agent: x, patient: y) & successful(theme: y) -> ambitious(theme: x)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "7/7",
+        "sentences": "7/7",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "contrapositive",
+      "name": "01_not_mortal",
+      "label": "contrapositive/01_not_mortal",
+      "document": "All men are mortal. Zeus is not mortal.",
+      "lexicon_raw": "predicate man {theme: e}\n  forms: man, men\n  \"a human adult male\"\npredicate mortal {theme: e}\n  forms: mortal\n  \"subject to death\"\nentity zeus : e\n  forms: Zeus, zeus\n  \"Greek god of thunder\"",
+      "lexicon": {
+        "predicates": {
+          "man": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "man",
+              "men"
+            ],
+            "gloss": "a human adult male"
+          },
+          "mortal": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "mortal"
+            ],
+            "gloss": "subject to death"
+          }
+        },
+        "entities": {
+          "zeus": {
+            "type": "e",
+            "forms": [
+              "Zeus",
+              "zeus"
+            ],
+            "gloss": "Greek god of thunder"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "All men are mortal.",
+          "tokens": [
+            "All",
+            "men",
+            "are",
+            "mortal."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_universal",
+              "output": "always [x:e]: man(theme: x) -> mortal(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "man",
+                  "type": "{theme:e}"
+                },
+                "$Q": {
+                  "canonical": "mortal",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Zeus is not mortal.",
+          "tokens": [
+            "Zeus",
+            "is",
+            "not",
+            "mortal."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "negated_copular_fact",
+              "output": "not mortal(theme: zeus)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "zeus",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "mortal",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "not mortal(theme: zeus)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e]: man(theme: x) -> mortal(theme: x)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "always [x:e]: man(theme: x) -> mortal(theme: x)",
+        "not mortal(theme: zeus)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "depth_chains",
+      "name": "01_socrates",
+      "label": "depth_chains/01_socrates",
+      "document": "Socrates is a man. All men are mortal.",
+      "lexicon_raw": "predicate man {theme: e}\n  forms: man, men\n  \"a human adult male\"\npredicate mortal {theme: e}\n  forms: mortal\n  \"subject to death; will eventually die\"\nentity socrates : e\n  forms: Socrates, socrates\n  \"Greek philosopher, c. 470-399 BC\"",
+      "lexicon": {
+        "predicates": {
+          "man": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "man",
+              "men"
+            ],
+            "gloss": "a human adult male"
+          },
+          "mortal": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "mortal"
+            ],
+            "gloss": "subject to death; will eventually die"
+          }
+        },
+        "entities": {
+          "socrates": {
+            "type": "e",
+            "forms": [
+              "Socrates",
+              "socrates"
+            ],
+            "gloss": "Greek philosopher, c. 470-399 BC"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Socrates is a man.",
+          "tokens": [
+            "Socrates",
+            "is",
+            "a",
+            "man."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_fact",
+              "output": "man(theme: socrates)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "socrates",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "man",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "All men are mortal.",
+          "tokens": [
+            "All",
+            "men",
+            "are",
+            "mortal."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_universal",
+              "output": "always [x:e]: man(theme: x) -> mortal(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "man",
+                  "type": "{theme:e}"
+                },
+                "$Q": {
+                  "canonical": "mortal",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "man(theme: socrates)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e]: man(theme: x) -> mortal(theme: x)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "man(theme: socrates)",
+        "always [x:e]: man(theme: x) -> mortal(theme: x)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "depth_chains",
+      "name": "03_food_chain",
+      "label": "depth_chains/03_food_chain",
+      "document": "A sparrow is a bird. All birds are mortal.",
+      "lexicon_raw": "predicate sparrow {theme: e}\n  forms: sparrow, sparrows\n  \"a small bird\"\npredicate bird {theme: e}\n  forms: bird, birds\n  \"a feathered animal\"\npredicate mortal {theme: e}\n  forms: mortal\n  \"subject to death\"",
+      "lexicon": {
+        "predicates": {
+          "sparrow": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "sparrow",
+              "sparrows"
+            ],
+            "gloss": "a small bird"
+          },
+          "bird": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "bird",
+              "birds"
+            ],
+            "gloss": "a feathered animal"
+          },
+          "mortal": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "mortal"
+            ],
+            "gloss": "subject to death"
+          }
+        },
+        "entities": {}
+      },
+      "sentences": [
+        {
+          "text": "A sparrow is a bird.",
+          "tokens": [
+            "A",
+            "sparrow",
+            "is",
+            "a",
+            "bird."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_generic",
+              "output": "always [x:e]: sparrow(theme: x) -> bird(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "sparrow",
+                  "type": "{theme:e}"
+                },
+                "$Q": {
+                  "canonical": "bird",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "All birds are mortal.",
+          "tokens": [
+            "All",
+            "birds",
+            "are",
+            "mortal."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_universal",
+              "output": "always [x:e]: bird(theme: x) -> mortal(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "bird",
+                  "type": "{theme:e}"
+                },
+                "$Q": {
+                  "canonical": "mortal",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "always [x:e]: sparrow(theme: x) -> bird(theme: x)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e]: bird(theme: x) -> mortal(theme: x)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "always [x:e]: sparrow(theme: x) -> bird(theme: x)",
+        "always [x:e]: bird(theme: x) -> mortal(theme: x)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "identity",
+      "name": "01_clark_kent",
+      "label": "identity/01_clark_kent",
+      "document": "Clark Kent is Superman. Superman flies.",
+      "lexicon_raw": "predicate identity {theme: e, reference: e}\n  forms: identity\n  \"is the same person as\"\npredicate flies {theme: e}\n  forms: flies, fly\n  \"able to fly\"\nentity clark : e\n  forms: Clark Kent, clark\n  \"Clark Kent, reporter\"\nentity superman : e\n  forms: Superman, superman\n  \"Superman, superhero\"",
+      "lexicon": {
+        "predicates": {
+          "identity": {
+            "roles": {
+              "theme": "e",
+              "reference": "e"
+            },
+            "forms": [
+              "identity"
+            ],
+            "gloss": "is the same person as"
+          },
+          "flies": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "flies",
+              "fly"
+            ],
+            "gloss": "able to fly"
+          }
+        },
+        "entities": {
+          "clark": {
+            "type": "e",
+            "forms": [
+              "Clark Kent",
+              "clark"
+            ],
+            "gloss": "Clark Kent, reporter"
+          },
+          "superman": {
+            "type": "e",
+            "forms": [
+              "Superman",
+              "superman"
+            ],
+            "gloss": "Superman, superhero"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Clark Kent is Superman.",
+          "tokens": [
+            "Clark",
+            "Kent",
+            "is",
+            "Superman."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_identity",
+              "output": "identity(theme: clark, reference: superman)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "clark",
+                  "type": "e"
+                },
+                "$y": {
+                  "canonical": "superman",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Superman flies.",
+          "tokens": [
+            "Superman",
+            "flies."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "intransitive_fact",
+              "output": "flies(theme: superman)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "superman",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "flies",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "identity(theme: clark, reference: superman)",
+          "derived": true
+        },
+        {
+          "fact": "flies(theme: superman)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "identity(theme: clark, reference: superman)",
+        "flies(theme: superman)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "multiple_rules",
+      "name": "01_popular",
+      "label": "multiple_rules/01_popular",
+      "document": "Jack is funny. Jack is kind. If someone is funny, they are liked. If someone is kind, they are liked.",
+      "lexicon_raw": "predicate funny {theme: e}\n  forms: funny\n  \"causing laughter\"\npredicate kind {theme: e}\n  forms: kind\n  \"friendly and considerate\"\npredicate liked {theme: e}\n  forms: liked\n  \"popular with people\"\nentity jack : e\n  forms: Jack, jack\n  \"a person named Jack\"",
+      "lexicon": {
+        "predicates": {
+          "funny": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "funny"
+            ],
+            "gloss": "causing laughter"
+          },
+          "kind": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "kind"
+            ],
+            "gloss": "friendly and considerate"
+          },
+          "liked": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "liked"
+            ],
+            "gloss": "popular with people"
+          }
+        },
+        "entities": {
+          "jack": {
+            "type": "e",
+            "forms": [
+              "Jack",
+              "jack"
+            ],
+            "gloss": "a person named Jack"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Jack is funny.",
+          "tokens": [
+            "Jack",
+            "is",
+            "funny."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_fact_bare",
+              "output": "funny(theme: jack)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "jack",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "funny",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Jack is kind.",
+          "tokens": [
+            "Jack",
+            "is",
+            "kind."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_fact_bare",
+              "output": "kind(theme: jack)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "jack",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "kind",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "If someone is funny, they are liked.",
+          "tokens": [
+            "If",
+            "someone",
+            "is",
+            "funny,",
+            "they",
+            "are",
+            "liked."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "conditional_someone_copular",
+              "output": "always [x:e]: funny(theme: x) -> liked(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "funny",
+                  "type": "{theme:e}"
+                },
+                "$Q": {
+                  "canonical": "liked",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "If someone is kind, they are liked.",
+          "tokens": [
+            "If",
+            "someone",
+            "is",
+            "kind,",
+            "they",
+            "are",
+            "liked."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "conditional_someone_copular",
+              "output": "always [x:e]: kind(theme: x) -> liked(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "kind",
+                  "type": "{theme:e}"
+                },
+                "$Q": {
+                  "canonical": "liked",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "funny(theme: jack)",
+          "derived": true
+        },
+        {
+          "fact": "kind(theme: jack)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e]: funny(theme: x) -> liked(theme: x)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e]: kind(theme: x) -> liked(theme: x)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "funny(theme: jack)",
+        "kind(theme: jack)",
+        "always [x:e]: funny(theme: x) -> liked(theme: x)",
+        "always [x:e]: kind(theme: x) -> liked(theme: x)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "4/4",
+        "sentences": "4/4",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "negation",
+      "name": "01_not_mortal",
+      "label": "negation/01_not_mortal",
+      "document": "Zeus is a god. No gods are mortal.",
+      "lexicon_raw": "predicate god {theme: e}\n  forms: god, gods\n  \"a deity\"\npredicate mortal {theme: e}\n  forms: mortal\n  \"subject to death\"\nentity zeus : e\n  forms: Zeus, zeus\n  \"Greek god of thunder\"",
+      "lexicon": {
+        "predicates": {
+          "god": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "god",
+              "gods"
+            ],
+            "gloss": "a deity"
+          },
+          "mortal": {
+            "roles": {
+              "theme": "e"
+            },
+            "forms": [
+              "mortal"
+            ],
+            "gloss": "subject to death"
+          }
+        },
+        "entities": {
+          "zeus": {
+            "type": "e",
+            "forms": [
+              "Zeus",
+              "zeus"
+            ],
+            "gloss": "Greek god of thunder"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Zeus is a god.",
+          "tokens": [
+            "Zeus",
+            "is",
+            "a",
+            "god."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "copular_fact",
+              "output": "god(theme: zeus)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "zeus",
+                  "type": "e"
+                },
+                "$P": {
+                  "canonical": "god",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "No gods are mortal.",
+          "tokens": [
+            "No",
+            "gods",
+            "are",
+            "mortal."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "negated_universal",
+              "output": "never [x:e]: god(theme: x) -> mortal(theme: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$P": {
+                  "canonical": "god",
+                  "type": "{theme:e}"
+                },
+                "$Q": {
+                  "canonical": "mortal",
+                  "type": "{theme:e}"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "god(theme: zeus)",
+          "derived": true
+        },
+        {
+          "fact": "never [x:e]: god(theme: x) -> mortal(theme: x)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "god(theme: zeus)",
+        "never [x:e]: god(theme: x) -> mortal(theme: x)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "symmetric",
+      "name": "01_married",
+      "label": "symmetric/01_married",
+      "document": "If John is married to Mary, then Mary is married to John. John is married to Mary.",
+      "lexicon_raw": "predicate married {theme: e, reference: e}\n  forms: married\n  \"in a marriage with\"\nentity john : e\n  forms: John, john\n  \"a person named John\"\nentity mary : e\n  forms: Mary, mary\n  \"a person named Mary\"",
+      "lexicon": {
+        "predicates": {
+          "married": {
+            "roles": {
+              "theme": "e",
+              "reference": "e"
+            },
+            "forms": [
+              "married"
+            ],
+            "gloss": "in a marriage with"
+          }
+        },
+        "entities": {
+          "john": {
+            "type": "e",
+            "forms": [
+              "John",
+              "john"
+            ],
+            "gloss": "a person named John"
+          },
+          "mary": {
+            "type": "e",
+            "forms": [
+              "Mary",
+              "mary"
+            ],
+            "gloss": "a person named Mary"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "If John is married to Mary, then Mary is married to John.",
+          "tokens": [
+            "If",
+            "John",
+            "is",
+            "married",
+            "to",
+            "Mary,",
+            "then",
+            "Mary",
+            "is",
+            "married",
+            "to",
+            "John."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "conditional_symmetry_prep",
+              "output": "always [x:e, y:e]: married(theme: x, reference: y) -> married(theme: y, reference: x)",
+              "output_type": "rule",
+              "bindings": {
+                "$x": {
+                  "canonical": "john",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "married",
+                  "type": "{theme:e,reference:e}"
+                },
+                "$y": {
+                  "canonical": "mary",
+                  "type": "e"
+                },
+                "$y2": {
+                  "canonical": "mary",
+                  "type": "e"
+                },
+                "$V2": {
+                  "canonical": "married",
+                  "type": "{theme:e,reference:e}"
+                },
+                "$x2": {
+                  "canonical": "john",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "John is married to Mary.",
+          "tokens": [
+            "John",
+            "is",
+            "married",
+            "to",
+            "Mary."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "prepositional_copular_fact",
+              "output": "married(theme: john, reference: mary)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "john",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "married",
+                  "type": "{theme:e,reference:e}"
+                },
+                "$y": {
+                  "canonical": "mary",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "married(theme: john, reference: mary)",
+          "derived": true
+        },
+        {
+          "fact": "always [x:e, y:e]: married(theme: x, reference: y) -> married(theme: y, reference: x)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "always [x:e, y:e]: married(theme: x, reference: y) -> married(theme: y, reference: x)",
+        "married(theme: john, reference: mary)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    },
+    {
+      "group": "transitivity",
+      "name": "01_taller",
+      "label": "transitivity/01_taller",
+      "document": "Alice is taller than Bob. Bob is taller than Carol.",
+      "lexicon_raw": "predicate taller_than {theme: e, reference: e}\n  forms: taller\n  \"having greater height than\"\nentity alice : e\n  forms: Alice, alice\n  \"a person named Alice\"\nentity bob : e\n  forms: Bob, bob\n  \"a person named Bob\"\nentity carol : e\n  forms: Carol, carol\n  \"a person named Carol\"",
+      "lexicon": {
+        "predicates": {
+          "taller_than": {
+            "roles": {
+              "theme": "e",
+              "reference": "e"
+            },
+            "forms": [
+              "taller"
+            ],
+            "gloss": "having greater height than"
+          }
+        },
+        "entities": {
+          "alice": {
+            "type": "e",
+            "forms": [
+              "Alice",
+              "alice"
+            ],
+            "gloss": "a person named Alice"
+          },
+          "bob": {
+            "type": "e",
+            "forms": [
+              "Bob",
+              "bob"
+            ],
+            "gloss": "a person named Bob"
+          },
+          "carol": {
+            "type": "e",
+            "forms": [
+              "Carol",
+              "carol"
+            ],
+            "gloss": "a person named Carol"
+          }
+        }
+      },
+      "sentences": [
+        {
+          "text": "Alice is taller than Bob.",
+          "tokens": [
+            "Alice",
+            "is",
+            "taller",
+            "than",
+            "Bob."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "prepositional_copular_fact",
+              "output": "taller_than(theme: alice, reference: bob)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "alice",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "taller_than",
+                  "type": "{theme:e,reference:e}"
+                },
+                "$y": {
+                  "canonical": "bob",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "text": "Bob is taller than Carol.",
+          "tokens": [
+            "Bob",
+            "is",
+            "taller",
+            "than",
+            "Carol."
+          ],
+          "num_parses": 1,
+          "failed": false,
+          "ambiguous": false,
+          "matches": [
+            {
+              "rule": "prepositional_copular_fact",
+              "output": "taller_than(theme: bob, reference: carol)",
+              "output_type": "fact",
+              "bindings": {
+                "$x": {
+                  "canonical": "bob",
+                  "type": "e"
+                },
+                "$V": {
+                  "canonical": "taller_than",
+                  "type": "{theme:e,reference:e}"
+                },
+                "$y": {
+                  "canonical": "carol",
+                  "type": "e"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact": "taller_than(theme: alice, reference: bob)",
+          "derived": true
+        },
+        {
+          "fact": "taller_than(theme: bob, reference: carol)",
+          "derived": true
+        }
+      ],
+      "extra_facts": [],
+      "derived_facts": [
+        "taller_than(theme: alice, reference: bob)",
+        "taller_than(theme: bob, reference: carol)"
+      ],
+      "result": {
+        "passing": true,
+        "facts": "2/2",
+        "sentences": "2/2",
+        "ambiguous": 0
+      }
+    }
+  ]
+}
